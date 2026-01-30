@@ -48,6 +48,12 @@ const AdminUsers = () => {
     { id: "ADMIN", label: "Admins" },
   ];
 
+  const roleOptions = [
+    { value: "PATIENT", label: "Patient" },
+    { value: "DOCTOR", label: "Doctor" },
+    { value: "ADMIN", label: "Admin" },
+  ];
+
   useEffect(() => {
     fetchUsers();
   }, [activeTab]);
@@ -491,11 +497,8 @@ const AdminUsers = () => {
             value={formData.role}
             onChange={handleInputChange}
             required
-          >
-            <option value="PATIENT">Patient</option>
-            <option value="DOCTOR">Doctor</option>
-            <option value="ADMIN">Admin</option>
-          </Select>
+            options={roleOptions}
+          />
 
           {/* Doctor-specific fields */}
           {formData.role === "DOCTOR" && (

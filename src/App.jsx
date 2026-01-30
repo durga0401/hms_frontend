@@ -6,8 +6,6 @@ import PatientDashboard from "./pages/PatientDashboard";
 import BookAppointment from "./pages/BookAppointment";
 import PatientAppointments from "./pages/PatientAppointments";
 import PatientDoctors from "./pages/PatientDoctors";
-import PatientPrescriptions from "./pages/PatientPrescriptions";
-import PatientHistory from "./pages/PatientHistory";
 import PatientSettings from "./pages/PatientSettings";
 import PatientProfile from "./pages/PatientProfile";
 import PatientNotifications from "./pages/PatientNotifications";
@@ -28,7 +26,9 @@ import AdminNotifications from "./pages/AdminNotifications";
 const App = () => {
   return (
     <AuthProvider>
-      <BrowserRouter>
+      <BrowserRouter
+        future={{ v7_relativeSplatPath: true, v7_startTransition: true }}
+      >
         <Routes>
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
@@ -61,11 +61,6 @@ const App = () => {
             element={<PatientAppointments />}
           />
           <Route path="/patient/doctors" element={<PatientDoctors />} />
-          <Route
-            path="/patient/prescriptions"
-            element={<PatientPrescriptions />}
-          />
-          <Route path="/patient/history" element={<PatientHistory />} />
           <Route path="/patient/settings" element={<PatientSettings />} />
           <Route path="/patient/profile" element={<PatientProfile />} />
           <Route

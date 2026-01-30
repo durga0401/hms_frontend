@@ -10,6 +10,11 @@ const AdminAppointments = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
+  const [expandedId, setExpandedId] = useState(null);
+
+  const toggleDetails = (id) => {
+    setExpandedId(expandedId === id ? null : id);
+  };
 
   // Filter states
   const [filters, setFilters] = useState({
@@ -329,6 +334,7 @@ const AdminAppointments = () => {
                 <table className="w-full">
                   <thead className="bg-gray-50">
                     <tr>
+                      <th className="text-left py-3 px-4 text-sm font-medium text-gray-500 w-10"></th>
                       <th className="text-left py-3 px-4 text-sm font-medium text-gray-500">
                         ID
                       </th>
@@ -342,9 +348,6 @@ const AdminAppointments = () => {
                         Date
                       </th>
                       <th className="text-left py-3 px-4 text-sm font-medium text-gray-500">
-                        Time
-                      </th>
-                      <th className="text-left py-3 px-4 text-sm font-medium text-gray-500">
                         Status
                       </th>
                       <th className="text-left py-3 px-4 text-sm font-medium text-gray-500">
@@ -354,97 +357,174 @@ const AdminAppointments = () => {
                   </thead>
                   <tbody className="divide-y divide-gray-200">
                     {filteredAppointments.map((appointment) => (
-                      <tr key={appointment.id} className="hover:bg-gray-50">
-                        <td className="py-3 px-4 text-sm text-gray-600">
-                          #{appointment.id}
-                        </td>
-                        <td className="py-3 px-4">
-                          <div className="flex items-center">
-                            <div className="h-8 w-8 rounded-full bg-purple-100 flex items-center justify-center mr-3">
-                              <span className="text-sm font-medium text-purple-600">
-                                {appointment.patient_name
-                                  ?.charAt(0)
-                                  ?.toUpperCase() || "?"}
-                              </span>
-                            </div>
-                            <div>
+                      <>
+                        <tr key={appointment.id} className="hover:bg-gray-50">
+                          <td className="py-3 px-4">
+                            <button
+                              onClick={() => toggleDetails(appointment.id)}
+                              className="p-1 rounded-md hover:bg-gray-200 transition-colors"
+                              title={
+                                expandedId === appointment.id
+                                  ? "Hide details"
+                                  : "Show details"
+                              }
+                            >
+                              <svg
+                                className={`w-4 h-4 text-gray-500 transition-transform ${expandedId === appointment.id ? "rotate-90" : ""}`}
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                              >
+                                <path
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                  strokeWidth={2}
+                                  d="M9 5l7 7-7 7"
+                                />
+                              </svg>
+                            </button>
+                          </td>
+                          <td className="py-3 px-4 text-sm text-gray-600">
+                            #{appointment.id}
+                          </td>
+                          <td className="py-3 px-4">
+                            <div className="flex items-center">
+                              <div className="h-8 w-8 rounded-full bg-purple-100 flex items-center justify-center mr-3">
+                                <span className="text-sm font-medium text-purple-600">
+                                  {appointment.patient_name
+                                    ?.charAt(0)
+                                    ?.toUpperCase() || "?"}
+                                </span>
+                              </div>
                               <span className="font-medium text-gray-800">
                                 {appointment.patient_name}
                               </span>
-                              <p className="text-xs text-gray-500">
-                                {appointment.patient_email}
-                              </p>
                             </div>
-                          </div>
-                        </td>
-                        <td className="py-3 px-4">
-                          <div>
+                          </td>
+                          <td className="py-3 px-4">
                             <span className="font-medium text-gray-800">
                               Dr. {appointment.doctor_name}
                             </span>
-                            <p className="text-xs text-gray-500">
-                              {appointment.specialization}
-                            </p>
-                          </div>
-                        </td>
-                        <td className="py-3 px-4 text-sm text-gray-600">
-                          {formatDate(appointment.appointment_date)}
-                        </td>
-                        <td className="py-3 px-4 text-sm text-gray-600">
-                          {formatTime(appointment.appointment_time)}
-                        </td>
-                        <td className="py-3 px-4">
-                          {getStatusBadge(appointment.status)}
-                        </td>
-                        <td className="py-3 px-4">
-                          <div className="flex items-center space-x-2">
-                            <button
-                              onClick={() => openViewModal(appointment)}
-                              className="p-2 text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
-                              title="View"
-                            >
-                              <svg
-                                className="w-4 h-4"
-                                fill="none"
-                                stroke="currentColor"
-                                viewBox="0 0 24 24"
+                          </td>
+                          <td className="py-3 px-4 text-sm text-gray-600">
+                            {formatDate(appointment.appointment_date)}
+                          </td>
+                          <td className="py-3 px-4">
+                            {getStatusBadge(appointment.status)}
+                          </td>
+                          <td className="py-3 px-4">
+                            <div className="flex items-center space-x-2">
+                              <button
+                                onClick={() => openViewModal(appointment)}
+                                className="p-2 text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
+                                title="View"
                               >
-                                <path
-                                  strokeLinecap="round"
-                                  strokeLinejoin="round"
-                                  strokeWidth={2}
-                                  d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-                                />
-                                <path
-                                  strokeLinecap="round"
-                                  strokeLinejoin="round"
-                                  strokeWidth={2}
-                                  d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
-                                />
-                              </svg>
-                            </button>
-                            <button
-                              onClick={() => openDeleteModal(appointment)}
-                              className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
-                              title="Delete"
-                            >
-                              <svg
-                                className="w-4 h-4"
-                                fill="none"
-                                stroke="currentColor"
-                                viewBox="0 0 24 24"
+                                <svg
+                                  className="w-4 h-4"
+                                  fill="none"
+                                  stroke="currentColor"
+                                  viewBox="0 0 24 24"
+                                >
+                                  <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth={2}
+                                    d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                                  />
+                                  <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth={2}
+                                    d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+                                  />
+                                </svg>
+                              </button>
+                              <button
+                                onClick={() => openDeleteModal(appointment)}
+                                className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                                title="Delete"
                               >
-                                <path
-                                  strokeLinecap="round"
-                                  strokeLinejoin="round"
-                                  strokeWidth={2}
-                                  d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
-                                />
-                              </svg>
-                            </button>
-                          </div>
-                        </td>
-                      </tr>
+                                <svg
+                                  className="w-4 h-4"
+                                  fill="none"
+                                  stroke="currentColor"
+                                  viewBox="0 0 24 24"
+                                >
+                                  <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth={2}
+                                    d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                                  />
+                                </svg>
+                              </button>
+                            </div>
+                          </td>
+                        </tr>
+                        {expandedId === appointment.id && (
+                          <tr
+                            key={`${appointment.id}-details`}
+                            className="bg-gray-50"
+                          >
+                            <td colSpan={7} className="py-4 px-6">
+                              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                                <div>
+                                  <p className="text-xs font-medium text-gray-500 uppercase">
+                                    Patient Email
+                                  </p>
+                                  <p className="text-sm text-gray-800">
+                                    {appointment.patient_email || "—"}
+                                  </p>
+                                </div>
+                                <div>
+                                  <p className="text-xs font-medium text-gray-500 uppercase">
+                                    Specialization
+                                  </p>
+                                  <p className="text-sm text-gray-800">
+                                    {appointment.specialization || "—"}
+                                  </p>
+                                </div>
+                                <div>
+                                  <p className="text-xs font-medium text-gray-500 uppercase">
+                                    Time
+                                  </p>
+                                  <p className="text-sm text-gray-800">
+                                    {formatTime(appointment.appointment_time)}
+                                  </p>
+                                </div>
+                                <div>
+                                  <p className="text-xs font-medium text-gray-500 uppercase">
+                                    Status
+                                  </p>
+                                  <p className="text-sm text-gray-800">
+                                    {appointment.status}
+                                  </p>
+                                </div>
+                                {appointment.reason && (
+                                  <div className="col-span-2 md:col-span-4">
+                                    <p className="text-xs font-medium text-gray-500 uppercase">
+                                      Reason
+                                    </p>
+                                    <p className="text-sm text-gray-800">
+                                      {appointment.reason}
+                                    </p>
+                                  </div>
+                                )}
+                                {appointment.notes && (
+                                  <div className="col-span-2 md:col-span-4">
+                                    <p className="text-xs font-medium text-gray-500 uppercase">
+                                      Notes
+                                    </p>
+                                    <p className="text-sm text-gray-800">
+                                      {appointment.notes}
+                                    </p>
+                                  </div>
+                                )}
+                              </div>
+                            </td>
+                          </tr>
+                        )}
+                      </>
                     ))}
                   </tbody>
                 </table>

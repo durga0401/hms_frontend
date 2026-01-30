@@ -16,9 +16,7 @@ const Sidebar = ({ user }) => {
     { label: "Dashboard", icon: "🏠", to: "/patient/dashboard" },
     { label: "Appointments", icon: "📅", to: "/patient/appointments" },
     { label: "Doctors", icon: "👨‍⚕️", to: "/patient/doctors" },
-    { label: "Prescriptions", icon: "💊", to: "/patient/prescriptions" },
     { label: "Notifications", icon: "🔔", to: "/patient/notifications" },
-    { label: "History", icon: "🕘", to: "/patient/history" },
     { label: "Profile", icon: "👤", to: "/patient/profile" },
     { label: "Settings", icon: "⚙️", to: "/patient/settings" },
   ];
