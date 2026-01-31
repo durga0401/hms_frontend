@@ -1,4 +1,10 @@
-import { createContext, useContext, useState, useEffect } from "react";
+import {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  useCallback,
+} from "react";
 import { authAPI } from "../services/api";
 
 const AuthContext = createContext(null);
@@ -48,6 +54,14 @@ export const AuthProvider = ({ children }) => {
     return userData;
   };
 
+  // OAuth login - just set token and user without API call
+  const loginWithOAuth = useCallback((newToken, userData) => {
+    localStorage.setItem("token", newToken);
+    localStorage.setItem("user", JSON.stringify(userData));
+    setToken(newToken);
+    setUser(userData);
+  }, []);
+
   const logout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("user");
@@ -61,6 +75,7 @@ export const AuthProvider = ({ children }) => {
     loading,
     isAuthenticated: !!token,
     login,
+    loginWithOAuth,
     logout,
   };
 
