@@ -1,4 +1,7 @@
+import { useNavigate } from "react-router-dom";
+
 const DoctorNavbar = ({ title = "Doctor Dashboard" }) => {
+  const navigate = useNavigate();
   return (
     <header className="bg-white border-b border-gray-200 px-6 py-4 flex items-center justify-between">
       <div className="flex items-center gap-3">
@@ -12,7 +15,12 @@ const DoctorNavbar = ({ title = "Doctor Dashboard" }) => {
       </div>
 
       <div className="flex items-center gap-4">
-        <button className="p-2 rounded-lg bg-gray-100 hover:bg-gray-200 text-gray-600">
+        <button
+          type="button"
+          onClick={() => navigate("/doctor/notifications")}
+          className="p-2 rounded-lg bg-gray-100 hover:bg-gray-200 text-gray-600"
+          aria-label="View notifications"
+        >
           <svg
             className="w-5 h-5"
             fill="none"

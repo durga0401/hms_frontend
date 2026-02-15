@@ -168,6 +168,8 @@ const DoctorProfile = () => {
                     value={profile.name}
                     onChange={handleProfileChange}
                     placeholder="Dr. John Doe"
+                    disabled
+                    helperText="Full name cannot be edited"
                   />
                   <Input
                     label="Phone"

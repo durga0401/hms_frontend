@@ -3,6 +3,7 @@ import { AuthProvider } from "./context/AuthContext";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import OAuthCallback from "./pages/OAuthCallback";
+import ForgotPassword from "./pages/ForgotPassword";
 import PatientDashboard from "./pages/PatientDashboard";
 import BookAppointment from "./pages/BookAppointment";
 import PatientAppointments from "./pages/PatientAppointments";
@@ -16,7 +17,6 @@ import DoctorProfile from "./pages/DoctorProfile";
 import DoctorNotifications from "./pages/DoctorNotifications";
 import DoctorAvailability from "./pages/DoctorAvailability";
 import DoctorPatients from "./pages/DoctorPatients";
-import DoctorSettings from "./pages/DoctorSettings";
 import AdminDashboard from "./pages/AdminDashboard";
 import AdminUsers from "./pages/AdminUsers";
 import AdminDoctors from "./pages/AdminDoctors";
@@ -34,6 +34,7 @@ const App = () => {
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/oauth-callback" element={<OAuthCallback />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/" element={<Navigate to="/login" replace />} />
 
           {/* Admin Routes */}
@@ -52,7 +53,6 @@ const App = () => {
           />
           <Route path="/doctor/availability" element={<DoctorAvailability />} />
           <Route path="/doctor/patients" element={<DoctorPatients />} />
-          <Route path="/doctor/settings" element={<DoctorSettings />} />
           <Route path="/patient/dashboard" element={<PatientDashboard />} />
           <Route
             path="/patient/appointments/book"

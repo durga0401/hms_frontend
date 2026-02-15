@@ -20,7 +20,6 @@ const DoctorSidebar = ({ user }) => {
     { label: "Patients", icon: "👥", to: "/doctor/patients" },
     { label: "Notifications", icon: "🔔", to: "/doctor/notifications" },
     { label: "Profile", icon: "👤", to: "/doctor/profile" },
-    { label: "Settings", icon: "⚙️", to: "/doctor/settings" },
   ];
 
   return (
