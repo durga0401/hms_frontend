@@ -71,6 +71,21 @@ const DoctorAvailability = () => {
     }
   };
 
+  const handleDelete = async (slotId) => {
+    setMessage({ type: "", text: "" });
+    try {
+      await doctorAPI.deleteAvailability(slotId);
+      setMessage({ type: "success", text: "Slot deleted successfully." });
+      setSlots((prev) => prev.filter((slot) => slot.id !== slotId));
+    } catch (err) {
+      setMessage({
+        type: "error",
+        text:
+          err.response?.data?.message || "Failed to delete availability slot.",
+      });
+    }
+  };
+
   const formatDate = (d) => {
     if (!d) return "";
     const date = new Date(d.includes("T") ? d.split("T")[0] : d);
@@ -183,7 +198,16 @@ const DoctorAvailability = () => {
                           {formatTime(slot.end_time)}
                         </p>
                       </div>
-                      <Badge variant="primary">Available</Badge>
+                      <div className="flex items-center gap-3">
+                        <Badge variant="primary">Available</Badge>
+                        <Button
+                          variant="secondary"
+                          size="sm"
+                          onClick={() => handleDelete(slot.id)}
+                        >
+                          Delete
+                        </Button>
+                      </div>
                     </div>
                   ))}
                 </div>

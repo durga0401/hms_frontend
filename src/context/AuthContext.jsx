@@ -5,7 +5,7 @@ import {
   useEffect,
   useCallback,
 } from "react";
-import { authAPI } from "../services/api";
+import { authAPI, setCsrfToken } from "../services/api";
 
 const AuthContext = createContext(null);
 
@@ -19,19 +19,29 @@ export const useAuth = () => {
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
-  const [token, setToken] = useState(localStorage.getItem("token"));
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const initAuth = async () => {
-      const storedToken = localStorage.getItem("token");
-      const storedUser = localStorage.getItem("user");
+      try {
+        const csrfRes = await authAPI.getCsrfToken();
+        if (csrfRes.data?.csrfToken) {
+          setCsrfToken(csrfRes.data.csrfToken);
+        }
 
-      if (storedToken && storedUser) {
-        setToken(storedToken);
-        setUser(JSON.parse(storedUser));
+        const authPages = ["/login", "/register", "/forgot-password"];
+        const isOnAuthPage = authPages.includes(window.location.pathname);
+        if (!isOnAuthPage) {
+          const profileRes = await authAPI.getProfile();
+          if (profileRes.data?.data?.user) {
+            setUser(profileRes.data.data.user);
+          }
+        }
+      } catch (err) {
+        setUser(null);
+      } finally {
+        setLoading(false);
       }
-      setLoading(false);
     };
 
     initAuth();
@@ -39,43 +49,41 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (email, password) => {
     const response = await authAPI.login(email, password);
-    const { token: newToken, user: userData } = response.data?.data || {};
+    const { user: userData } = response.data?.data || {};
 
-    if (!newToken || !userData) {
+    if (!userData) {
       throw new Error("Invalid login response");
     }
 
-    localStorage.setItem("token", newToken);
-    localStorage.setItem("user", JSON.stringify(userData));
-
-    setToken(newToken);
     setUser(userData);
-
     return userData;
   };
 
   // OAuth login - just set token and user without API call
-  const loginWithOAuth = useCallback((newToken, userData) => {
-    localStorage.setItem("token", newToken);
-    localStorage.setItem("user", JSON.stringify(userData));
-    setToken(newToken);
+  const completeOAuth = useCallback(async () => {
+    const response = await authAPI.oauthSession();
+    const { user: userData } = response.data?.data || {};
+    if (!userData) {
+      throw new Error("OAuth session incomplete");
+    }
     setUser(userData);
+    return userData;
   }, []);
 
-  const logout = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("user");
-    setToken(null);
-    setUser(null);
+  const logout = async () => {
+    try {
+      await authAPI.logout();
+    } finally {
+      setUser(null);
+    }
   };
 
   const value = {
     user,
-    token,
     loading,
-    isAuthenticated: !!token,
+    isAuthenticated: !!user,
     login,
-    loginWithOAuth,
+    completeOAuth,
     logout,
   };
 

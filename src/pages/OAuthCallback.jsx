@@ -6,7 +6,7 @@ import { Card, Loader } from "../components/ui";
 const OAuthCallback = () => {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
-  const { loginWithOAuth } = useAuth();
+  const { completeOAuth } = useAuth();
   const hasProcessed = useRef(false);
 
   useEffect(() => {
@@ -14,9 +14,7 @@ const OAuthCallback = () => {
     if (hasProcessed.current) return;
     hasProcessed.current = true;
 
-    const handleOAuthCallback = () => {
-      const token = searchParams.get("token");
-      const userParam = searchParams.get("user");
+    const handleOAuthCallback = async () => {
       const error = searchParams.get("error");
 
       if (error) {
@@ -26,41 +24,29 @@ const OAuthCallback = () => {
         return;
       }
 
-      if (token && userParam) {
-        try {
-          const user = JSON.parse(decodeURIComponent(userParam));
+      try {
+        const user = await completeOAuth();
 
-          // Store token and user in localStorage
-          localStorage.setItem("token", token);
-          localStorage.setItem("user", JSON.stringify(user));
-
-          // Update auth context
-          loginWithOAuth(token, user);
-
-          // Redirect based on role
-          switch (user.role) {
-            case "ADMIN":
-              navigate("/admin/dashboard");
-              break;
-            case "DOCTOR":
-              navigate("/doctor/dashboard");
-              break;
-            case "PATIENT":
-            default:
-              navigate("/patient/dashboard");
-              break;
-          }
-        } catch (err) {
-          console.error("OAuth callback error:", err);
-          navigate("/login?error=Failed to process authentication");
+        switch (user.role) {
+          case "ADMIN":
+            navigate("/admin/dashboard");
+            break;
+          case "DOCTOR":
+            navigate("/doctor/dashboard");
+            break;
+          case "PATIENT":
+          default:
+            navigate("/patient/dashboard");
+            break;
         }
-      } else {
-        navigate("/login?error=Invalid authentication response");
+      } catch (err) {
+        console.error("OAuth callback error:", err);
+        navigate("/login?error=Failed to process authentication");
       }
     };
 
     handleOAuthCallback();
-  }, [searchParams, navigate, loginWithOAuth]);
+  }, [searchParams, navigate, completeOAuth]);
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50">

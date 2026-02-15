@@ -1,37 +1,66 @@
 import axios from "axios";
 
 const API_URL = "http://localhost:5000/api";
+let csrfToken = null;
+
+export const setCsrfToken = (token) => {
+  csrfToken = token;
+};
 
 const api = axios.create({
   baseURL: API_URL,
+  withCredentials: true,
   headers: {
     "Content-Type": "application/json",
   },
 });
 
-// Add token to requests if available
+// Add CSRF token to mutating requests
 api.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem("token");
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
+    const method = config.method?.toLowerCase();
+    const isMutating = ["post", "put", "patch", "delete"].includes(method);
+    if (isMutating && csrfToken) {
+      config.headers["X-CSRF-Token"] = csrfToken;
     }
     return config;
   },
-  (error) => {
-    return Promise.reject(error);
-  },
+  (error) => Promise.reject(error),
 );
 
 // Handle response errors
 api.interceptors.response.use(
   (response) => response,
-  (error) => {
-    if (error.response?.status === 401) {
-      localStorage.removeItem("token");
-      localStorage.removeItem("user");
-      window.location.href = "/login";
+  async (error) => {
+    const originalRequest = error.config;
+    const requestUrl = originalRequest?.url || "";
+    const isAuthEndpoint = requestUrl.includes("/auth/");
+    const isRefreshRequest = requestUrl.includes("/auth/refresh");
+    const authPages = ["/login", "/register", "/forgot-password"];
+    const isOnAuthPage = authPages.includes(window.location.pathname);
+
+    if (
+      error.response?.status === 401 &&
+      !originalRequest?._retry &&
+      !isRefreshRequest &&
+      !isOnAuthPage
+    ) {
+      originalRequest._retry = true;
+      try {
+        await api.post("/auth/refresh");
+        return api(originalRequest);
+      } catch (refreshError) {
+        if (!isOnAuthPage) {
+          window.location.href = "/login";
+        }
+        return Promise.reject(refreshError);
+      }
     }
+
+    if (error.response?.status === 401 && isAuthEndpoint) {
+      return Promise.reject(error);
+    }
+
     return Promise.reject(error);
   },
 );
@@ -40,11 +69,14 @@ api.interceptors.response.use(
 export const authAPI = {
   login: (email, password) => api.post("/auth/login", { email, password }),
   register: (userData) => api.post("/auth/register", userData),
+  getCsrfToken: () => api.get("/auth/csrf-token"),
   getProfile: () => api.get("/auth/profile"),
   updateProfile: (data) => api.put("/auth/profile", data),
   changePassword: (data) => api.put("/auth/change-password", data),
   forgotPassword: (email) => api.post("/auth/forgot-password", { email }),
   resetPassword: (data) => api.post("/auth/reset-password", data),
+  logout: () => api.post("/auth/logout"),
+  oauthSession: () => api.get("/auth/oauth-session"),
 };
 
 // Notifications API
@@ -67,6 +99,7 @@ export const doctorAPI = {
     api.put(`/appointments/${id}/prescription`, { prescription }),
   getMyAvailability: () => api.get("/doctors/availability"),
   addAvailability: (data) => api.post("/doctors/availability", data),
+  deleteAvailability: (slotId) => api.delete(`/doctors/availability/${slotId}`),
 };
 
 // Admin API
