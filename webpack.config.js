@@ -33,6 +33,22 @@ module.exports = {
       filename: "index.html",
     }),
   ],
+  optimization: {
+    runtimeChunk: "single",
+    splitChunks: {
+      chunks: "all",
+      cacheGroups: {
+        vendor: {
+          test: /[\\/]node_modules[\\/]/,
+          name: "vendors",
+          chunks: "all",
+        },
+      },
+    },
+  },
+  performance: {
+    hints: false,
+  },
   devServer: {
     static: {
       directory: path.join(__dirname, "public"),
