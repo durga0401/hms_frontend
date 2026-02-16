@@ -47,7 +47,6 @@ const AdminAppointments = () => {
       setDoctors(doctorsRes.data.data || []);
     } catch (err) {
       setError("Failed to fetch data");
-      console.error(err);
     } finally {
       setLoading(false);
     }

@@ -27,7 +27,6 @@ const AdminDashboard = () => {
       setStats(dashboardRes.data.data);
       setRecentAppointments(appointmentsRes.data.data || []);
     } catch (err) {
-      console.error("Dashboard error:", err);
       if (err.response?.status === 401) {
         setError("Session expired. Please login again.");
         navigate("/login");

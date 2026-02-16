@@ -29,7 +29,6 @@ const DoctorDashboard = () => {
       const res = await doctorAPI.getMyAppointments();
       setAppointments(res.data?.data || []);
     } catch (err) {
-      console.error("Failed to fetch appointments", err);
     } finally {
       setLoading(false);
     }
@@ -63,9 +62,7 @@ const DoctorDashboard = () => {
       setAppointments((prev) =>
         prev.map((a) => (a.id === id ? { ...a, status } : a)),
       );
-    } catch (err) {
-      console.error("Failed to update status", err);
-    }
+    } catch (err) {}
   };
 
   const formatTime = (t) => {

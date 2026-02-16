@@ -29,9 +29,7 @@ const DoctorSettings = () => {
         name: data.name || "",
         phone: data.phone || "",
       });
-    } catch (err) {
-      console.error("Failed to fetch profile", err);
-    }
+    } catch (err) {}
   };
 
   const handleProfileChange = (e) => {

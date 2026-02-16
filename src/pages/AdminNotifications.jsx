@@ -216,7 +216,6 @@ const NotificationHistorySection = () => {
           : await notificationsAPI.getAll();
       setNotifications(res.data?.data || []);
     } catch (err) {
-      console.error("Failed to fetch notifications", err);
     } finally {
       setLoading(false);
     }
@@ -235,27 +234,21 @@ const NotificationHistorySection = () => {
       setNotifications((prev) =>
         prev.map((n) => (n.id === id ? { ...n, is_read: true } : n)),
       );
-    } catch (err) {
-      console.error("Failed to mark as read", err);
-    }
+    } catch (err) {}
   };
 
   const handleMarkAllAsRead = async () => {
     try {
       await notificationsAPI.markAllAsRead();
       setNotifications((prev) => prev.map((n) => ({ ...n, is_read: true })));
-    } catch (err) {
-      console.error("Failed to mark all as read", err);
-    }
+    } catch (err) {}
   };
 
   const handleDelete = async (id) => {
     try {
       await notificationsAPI.delete(id);
       setNotifications((prev) => prev.filter((n) => n.id !== id));
-    } catch (err) {
-      console.error("Failed to delete notification", err);
-    }
+    } catch (err) {}
   };
 
   const formatDate = (dateStr) => {
@@ -499,9 +492,7 @@ const AdminNotifications = () => {
       try {
         const res = await notificationsAPI.getAll();
         setNotifications(res.data?.data || []);
-      } catch (err) {
-        console.error("Failed to fetch notifications", err);
-      }
+      } catch (err) {}
     };
     fetchNotifications();
   }, [refreshKey]);

@@ -40,7 +40,6 @@ const OAuthCallback = () => {
             break;
         }
       } catch (err) {
-        console.error("OAuth callback error:", err);
         navigate("/login?error=Failed to process authentication");
       }
     };

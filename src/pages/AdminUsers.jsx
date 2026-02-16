@@ -71,7 +71,6 @@ const AdminUsers = () => {
       setUsers(response.data.data || []);
     } catch (err) {
       setError("Failed to fetch users");
-      console.error(err);
     } finally {
       setLoading(false);
     }

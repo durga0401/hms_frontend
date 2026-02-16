@@ -40,9 +40,7 @@ const DoctorProfile = () => {
         qualification: data.qualification || "",
         consultation_fee: data.consultation_fee ?? "",
       });
-    } catch (err) {
-      console.error("Failed to fetch profile", err);
-    }
+    } catch (err) {}
   };
 
   const handleProfileChange = (e) => {

@@ -35,7 +35,6 @@ const DoctorAvailability = () => {
       const res = await doctorAPI.getMyAvailability();
       setSlots(res.data?.data || []);
     } catch (err) {
-      console.error("Failed to fetch availability", err);
     } finally {
       setLoading(false);
     }

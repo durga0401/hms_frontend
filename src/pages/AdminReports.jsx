@@ -41,7 +41,6 @@ const AdminReports = () => {
       }
     } catch (err) {
       setError("Failed to fetch report data");
-      console.error(err);
     } finally {
       setLoading(false);
     }

@@ -53,7 +53,6 @@ const DoctorAppointments = () => {
       const res = await doctorAPI.getMyAppointments();
       setAppointments(res.data?.data || []);
     } catch (err) {
-      console.error("Failed to fetch appointments", err);
     } finally {
       setLoading(false);
     }
@@ -116,7 +115,6 @@ const DoctorAppointments = () => {
       );
       closeModal();
     } catch (err) {
-      console.error("Failed to update status", err);
     } finally {
       setUpdating(false);
     }

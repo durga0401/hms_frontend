@@ -44,7 +44,6 @@ const AdminDoctors = () => {
       setDoctors(response.data.data || []);
     } catch (err) {
       setError("Failed to fetch doctors");
-      console.error(err);
     } finally {
       setLoading(false);
     }
@@ -142,7 +141,6 @@ const AdminDoctors = () => {
       const response = await doctorsAPI.getAvailability(doctor.id);
       setDoctorAvailability(response.data.data || []);
     } catch (err) {
-      console.error("Failed to fetch availability", err);
       setDoctorAvailability([]);
     }
   };
