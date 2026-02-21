@@ -1,0 +1,33 @@
+version: "3.8"
+
+services:
+  hms-frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: hms-frontend
+    ports:
+      - "80:80"
+    environment:
+      - NODE_ENV=production
+    restart: unless-stopped
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "wget",
+          "--no-verbose",
+          "--tries=1",
+          "--spider",
+          "http://localhost:80/",
+        ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+    networks:
+      - hms-network
+
+networks:
+  hms-network:
+    driver: bridge

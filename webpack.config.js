@@ -1,5 +1,6 @@
 const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
+const webpack = require("webpack");
 
 module.exports = {
   entry: "./src/index.jsx",
@@ -32,6 +33,13 @@ module.exports = {
       template: "./public/index.html",
       filename: "index.html",
     }),
+    new webpack.DefinePlugin({
+      "process.env": JSON.stringify({
+        REACT_APP_API_URL:
+          process.env.REACT_APP_API_URL || "http://localhost:5001/api",
+        NODE_ENV: process.env.NODE_ENV || "development",
+      }),
+    }),
   ],
   optimization: {
     runtimeChunk: "single",
@@ -58,7 +66,7 @@ module.exports = {
     historyApiFallback: true,
     proxy: {
       "/api": {
-        target: "http://localhost:5000",
+        target: "http://localhost:5001",
         changeOrigin: true,
       },
     },

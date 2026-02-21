@@ -1,6 +1,7 @@
 import axios from "axios";
 
-const API_URL = "http://localhost:5000/api";
+// Use relative URL for production (nginx proxy), absolute URL for local development
+const API_URL = process.env.REACT_APP_API_URL || "/api";
 let csrfToken = null;
 
 export const setCsrfToken = (token) => {
