@@ -35,8 +35,12 @@ module.exports = {
     }),
     new webpack.DefinePlugin({
       "process.env": JSON.stringify({
+        // In production (NODE_ENV=production), use relative URL "/api" so requests go to the same domain
+        // In development, use localhost:5001
         REACT_APP_API_URL:
-          process.env.REACT_APP_API_URL || "http://localhost:5001/api",
+          process.env.NODE_ENV === "production"
+            ? "/api"
+            : process.env.REACT_APP_API_URL || "http://localhost:5001/api",
         NODE_ENV: process.env.NODE_ENV || "development",
       }),
     }),
