@@ -3,11 +3,14 @@ FROM node:18-alpine AS builder
 
 WORKDIR /app
 
+# Set production environment
+ENV NODE_ENV=production
+
 # Copy package files
 COPY package*.json ./
 
-# Install dependencies
-RUN npm ci
+# Install dependencies (including devDependencies for build)
+RUN npm ci --include=dev
 
 # Copy source files
 COPY . .
