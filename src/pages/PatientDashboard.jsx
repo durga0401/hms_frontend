@@ -37,12 +37,16 @@ const DashboardHeader = ({ name }) => {
   );
 };
 
-const UpcomingAppointmentsList = ({ appointments, onViewDetails, onViewAll }) => {
+const UpcomingAppointmentsList = ({
+  appointments,
+  onViewDetails,
+  onViewAll,
+}) => {
   return (
     <Card className="p-0">
       <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100">
         <h3 className="font-semibold text-gray-800">Upcoming Appointments</h3>
-        <button 
+        <button
           className="text-primary-600 text-sm font-medium hover:text-primary-700"
           onClick={onViewAll}
         >
@@ -78,8 +82,8 @@ const UpcomingAppointmentsList = ({ appointments, onViewDetails, onViewAll }) =>
               <p>{appointment.appointment_time}</p>
             </div>
             <Badge status={appointment.status} />
-            <Button 
-              variant="outline" 
+            <Button
+              variant="outline"
               size="sm"
               onClick={() => onViewDetails(appointment)}
             >
@@ -170,7 +174,7 @@ const PatientDashboard = () => {
           )}`,
         ),
       }))
-      .filter((appt) => appt.sortDate >= now && appt.status !== "CANCELLED")
+      .filter((appt) => appt.sortDate >= now && appt.status !== "CANCELLED" && appt.status !== "COMPLETED")
       .sort((a, b) => a.sortDate - b.sortDate)
       .slice(0, 5);
 
@@ -245,7 +249,9 @@ const PatientDashboard = () => {
                 <div className="xl:col-span-2">
                   <UpcomingAppointmentsList
                     appointments={filteredUpcomingAppointments}
-                    onViewDetails={(appointment) => setSelectedAppointment(appointment)}
+                    onViewDetails={(appointment) =>
+                      setSelectedAppointment(appointment)
+                    }
                   />
                 </div>
                 <div className="space-y-6">
