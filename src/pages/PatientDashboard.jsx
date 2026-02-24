@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import api, { authAPI } from "../services/api";
-import { Badge, Button, Card } from "../components/ui";
+import { Badge, Button, Card, Modal } from "../components/ui";
 import Navbar from "../components/layout/Navbar";
 import Sidebar from "../components/layout/Sidebar";
 import { useAuth } from "../context/AuthContext";
@@ -37,12 +37,15 @@ const DashboardHeader = ({ name }) => {
   );
 };
 
-const UpcomingAppointmentsList = ({ appointments }) => {
+const UpcomingAppointmentsList = ({ appointments, onViewDetails, onViewAll }) => {
   return (
     <Card className="p-0">
       <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100">
         <h3 className="font-semibold text-gray-800">Upcoming Appointments</h3>
-        <button className="text-primary-600 text-sm font-medium">
+        <button 
+          className="text-primary-600 text-sm font-medium hover:text-primary-700"
+          onClick={onViewAll}
+        >
           View All →
         </button>
       </div>
@@ -75,7 +78,11 @@ const UpcomingAppointmentsList = ({ appointments }) => {
               <p>{appointment.appointment_time}</p>
             </div>
             <Badge status={appointment.status} />
-            <Button variant="outline" size="sm">
+            <Button 
+              variant="outline" 
+              size="sm"
+              onClick={() => onViewDetails(appointment)}
+            >
               View Details
             </Button>
           </div>
@@ -115,6 +122,7 @@ const PatientDashboard = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
+  const [selectedAppointment, setSelectedAppointment] = useState(null);
 
   const normalizeDate = (dateValue) => {
     if (!dateValue) return "";
@@ -237,6 +245,7 @@ const PatientDashboard = () => {
                 <div className="xl:col-span-2">
                   <UpcomingAppointmentsList
                     appointments={filteredUpcomingAppointments}
+                    onViewDetails={(appointment) => setSelectedAppointment(appointment)}
                   />
                 </div>
                 <div className="space-y-6">
@@ -259,6 +268,78 @@ const PatientDashboard = () => {
           )}
         </main>
       </div>
+
+      {/* Appointment Details Modal */}
+      <Modal
+        isOpen={!!selectedAppointment}
+        onClose={() => setSelectedAppointment(null)}
+        title="Appointment Details"
+      >
+        {selectedAppointment && (
+          <div className="space-y-4">
+            <div className="flex items-center gap-4 pb-4 border-b">
+              <div className="w-12 h-12 bg-primary-100 rounded-full flex items-center justify-center">
+                <span className="text-primary-600 font-semibold text-lg">
+                  {selectedAppointment.doctor_name?.charAt(0) || "D"}
+                </span>
+              </div>
+              <div>
+                <h3 className="font-semibold text-gray-900">
+                  Dr. {selectedAppointment.doctor_name || "Unknown"}
+                </h3>
+                <p className="text-sm text-gray-500">
+                  {selectedAppointment.specialization || "General"}
+                </p>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <p className="text-sm text-gray-500">Date</p>
+                <p className="font-medium text-gray-900">
+                  {selectedAppointment.appointment_date || "N/A"}
+                </p>
+              </div>
+              <div>
+                <p className="text-sm text-gray-500">Time</p>
+                <p className="font-medium text-gray-900">
+                  {selectedAppointment.appointment_time || "N/A"}
+                </p>
+              </div>
+            </div>
+
+            <div>
+              <p className="text-sm text-gray-500">Status</p>
+              <Badge status={selectedAppointment.status} />
+            </div>
+
+            {selectedAppointment.reason && (
+              <div>
+                <p className="text-sm text-gray-500">Reason for Visit</p>
+                <p className="font-medium text-gray-900">
+                  {selectedAppointment.reason}
+                </p>
+              </div>
+            )}
+
+            {selectedAppointment.notes && (
+              <div>
+                <p className="text-sm text-gray-500">Notes</p>
+                <p className="text-gray-700">{selectedAppointment.notes}</p>
+              </div>
+            )}
+
+            <div className="flex justify-end gap-2 pt-4 border-t">
+              <Button
+                variant="outline"
+                onClick={() => setSelectedAppointment(null)}
+              >
+                Close
+              </Button>
+            </div>
+          </div>
+        )}
+      </Modal>
     </div>
   );
 };
