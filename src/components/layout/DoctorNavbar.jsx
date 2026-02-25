@@ -1,6 +1,11 @@
 import { useNavigate } from "react-router-dom";
 
-const DoctorNavbar = ({ title = "Doctor Dashboard" }) => {
+const DoctorNavbar = ({
+  title = "Doctor Dashboard",
+  searchValue = "",
+  onSearchChange,
+  searchPlaceholder = "Search patients...",
+}) => {
   const navigate = useNavigate();
   return (
     <header className="bg-white/80 backdrop-blur-md border-b border-gray-100 px-6 py-4 flex items-center justify-between sticky top-0 z-30 shadow-sm">
@@ -36,9 +41,21 @@ const DoctorNavbar = ({ title = "Doctor Dashboard" }) => {
           </svg>
           <input
             type="text"
-            placeholder="Search patients..."
-            className="bg-transparent border-none outline-none text-sm text-gray-600 placeholder-gray-400 w-40"
+            placeholder={searchPlaceholder}
+            value={searchValue}
+            onChange={(e) => onSearchChange?.(e.target.value)}
+            className="bg-transparent border-none outline-none text-sm text-gray-600 placeholder-gray-400 w-48"
           />
+          {searchValue && (
+            <button
+              onClick={() => onSearchChange?.("")}
+              className="ml-2 p-1 hover:bg-gray-200 rounded-full transition-colors"
+            >
+              <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          )}
         </div>
 
         {/* Notification Button */}

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import AdminSidebar from "../components/layout/AdminSidebar";
 import AdminNavbar from "../components/layout/AdminNavbar";
@@ -11,6 +11,7 @@ const AdminDashboard = () => {
   const [recentAppointments, setRecentAppointments] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
     fetchDashboardData();
@@ -41,6 +42,17 @@ const AdminDashboard = () => {
       setLoading(false);
     }
   };
+
+  // Filter appointments based on search term
+  const filteredAppointments = useMemo(() => {
+    if (!searchTerm) return recentAppointments;
+    const term = searchTerm.toLowerCase();
+    return recentAppointments.filter((appt) =>
+      `${appt.patient_name || ""} ${appt.doctor_name || ""} ${appt.status || ""}`
+        .toLowerCase()
+        .includes(term)
+    );
+  }, [searchTerm, recentAppointments]);
 
   const formatDate = (dateString) => {
     return new Date(dateString).toLocaleDateString("en-US", {
@@ -304,7 +316,7 @@ const AdminDashboard = () => {
       <div className="min-h-screen bg-gray-50">
         <AdminSidebar />
         <div className="lg:ml-64">
-          <AdminNavbar />
+          <AdminNavbar searchValue={searchTerm} onSearchChange={setSearchTerm} />
           <div className="p-6 flex items-center justify-center h-96">
             <div className="flex flex-col items-center gap-4">
               <div className="relative">
@@ -322,7 +334,7 @@ const AdminDashboard = () => {
     <div className="min-h-screen bg-gray-50">
       <AdminSidebar />
       <div className="lg:ml-64">
-        <AdminNavbar />
+        <AdminNavbar searchValue={searchTerm} onSearchChange={setSearchTerm} />
         <div className="p-6">
           {/* Page Header */}
           <div className="mb-8">
@@ -632,6 +644,11 @@ const AdminDashboard = () => {
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-lg font-semibold text-gray-800">
                 Recent Appointments
+                {searchTerm && (
+                  <span className="ml-2 text-sm font-normal text-gray-500">
+                    ({filteredAppointments.length} results for "{searchTerm}")
+                  </span>
+                )}
               </h2>
               <button
                 onClick={() => navigate("/admin/appointments")}
@@ -641,7 +658,7 @@ const AdminDashboard = () => {
               </button>
             </div>
 
-            {recentAppointments.length > 0 ? (
+            {filteredAppointments.length > 0 ? (
               <div className="overflow-x-auto">
                 <table className="w-full">
                   <thead>
@@ -667,7 +684,7 @@ const AdminDashboard = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    {recentAppointments.map((appointment) => (
+                    {filteredAppointments.map((appointment) => (
                       <tr
                         key={appointment.id}
                         className="border-b border-gray-100 hover:bg-gray-50"

@@ -57,6 +57,7 @@ const UpcomingAppointmentsList = ({
   appointments,
   onViewDetails,
   onViewAll,
+  searchTerm = "",
 }) => {
   return (
     <Card className="p-0 overflow-hidden">
@@ -77,7 +78,14 @@ const UpcomingAppointmentsList = ({
               />
             </svg>
           </div>
-          <h3 className="font-bold text-gray-800">Upcoming Appointments</h3>
+          <h3 className="font-bold text-gray-800">
+            Upcoming Appointments
+            {searchTerm && (
+              <span className="ml-2 text-sm font-normal text-gray-500">
+                ({appointments.length} results for "{searchTerm}")
+              </span>
+            )}
+          </h3>
         </div>
         <button
           className="text-primary-600 text-sm font-semibold hover:text-primary-700 flex items-center gap-1 transition-colors"
@@ -113,15 +121,18 @@ const UpcomingAppointmentsList = ({
                   strokeLinecap="round"
                   strokeLinejoin="round"
                   strokeWidth={2}
-                  d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                  d={searchTerm 
+                    ? "M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                    : "M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                  }
                 />
               </svg>
             </div>
             <p className="text-gray-500 font-medium">
-              No upcoming appointments
+              {searchTerm ? "No appointments found" : "No upcoming appointments"}
             </p>
             <p className="text-gray-400 text-sm mt-1">
-              Book an appointment to get started
+              {searchTerm ? "Try a different search term" : "Book an appointment to get started"}
             </p>
           </div>
         )}
@@ -425,7 +436,7 @@ const PatientDashboard = () => {
                     </div>
                   </div>
                 </div>
-                <div className="bg-gradient-to-br from-accent-500 to-accent-700 rounded-2xl p-6 text-white shadow-xl shadow-accent-500/20">
+                <div className="bg-gradient-to-br from-primary-500 to-primary-700 rounded-2xl p-6 text-white shadow-xl shadow-accent-500/20">
                   <div className="flex items-center justify-between">
                     <div>
                       <p className="text-accent-100 text-sm font-medium">
@@ -458,6 +469,7 @@ const PatientDashboard = () => {
                 <div className="xl:col-span-2">
                   <UpcomingAppointmentsList
                     appointments={filteredUpcomingAppointments}
+                    searchTerm={searchTerm}
                     onViewDetails={(appointment) =>
                       setSelectedAppointment(appointment)
                     }

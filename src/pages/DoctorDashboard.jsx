@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { doctorAPI } from "../services/api";
 import { Badge, Button, Card, Loader } from "../components/ui";
@@ -18,6 +18,7 @@ const DoctorDashboard = () => {
   const navigate = useNavigate();
   const [appointments, setAppointments] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
     fetchAppointments();
@@ -56,6 +57,17 @@ const DoctorDashboard = () => {
 
   const pendingAppts = appointments.filter((a) => a.status === "PENDING");
 
+  // Filter appointments based on search term
+  const filteredTodayAppts = useMemo(() => {
+    if (!searchTerm) return todayAppts;
+    const term = searchTerm.toLowerCase();
+    return todayAppts.filter((appt) =>
+      `${appt.patient_name || ""} ${appt.reason || ""} ${appt.status || ""}`
+        .toLowerCase()
+        .includes(term)
+    );
+  }, [searchTerm, todayAppts]);
+
   const handleUpdateStatus = async (id, status) => {
     try {
       await doctorAPI.updateAppointmentStatus(id, status);
@@ -78,7 +90,12 @@ const DoctorDashboard = () => {
     <div className="min-h-screen bg-gray-50 flex">
       <DoctorSidebar user={user} />
       <div className="flex-1">
-        <DoctorNavbar title="Dashboard" />
+        <DoctorNavbar 
+          title="Dashboard" 
+          searchValue={searchTerm}
+          onSearchChange={setSearchTerm}
+          searchPlaceholder="Search patients..."
+        />
         <main className="p-6">
           {/* Header */}
           <div className="mb-8">
@@ -227,14 +244,19 @@ const DoctorDashboard = () => {
                     </div>
                     <h2 className="text-lg font-bold text-gray-800">
                       Today's Schedule
+                      {searchTerm && (
+                        <span className="ml-2 text-sm font-normal text-gray-500">
+                          ({filteredTodayAppts.length} results for "{searchTerm}")
+                        </span>
+                      )}
                     </h2>
                   </div>
                   <span className="px-3 py-1 bg-primary-100 text-primary-700 rounded-full text-sm font-semibold">
-                    {todayAppts.length} appointments
+                    {filteredTodayAppts.length} appointments
                   </span>
                 </div>
                 <div className="p-6">
-                  {todayAppts.length === 0 ? (
+                  {filteredTodayAppts.length === 0 ? (
                     <div className="text-center py-8">
                       <div className="w-16 h-16 bg-gray-100 rounded-full mx-auto mb-4 flex items-center justify-center">
                         <svg
@@ -252,15 +274,15 @@ const DoctorDashboard = () => {
                         </svg>
                       </div>
                       <p className="text-gray-500 font-medium">
-                        No appointments scheduled for today
+                        {searchTerm ? "No patients found matching your search" : "No appointments scheduled for today"}
                       </p>
                       <p className="text-gray-400 text-sm mt-1">
-                        Enjoy your free time!
+                        {searchTerm ? "Try a different search term" : "Enjoy your free time!"}
                       </p>
                     </div>
                   ) : (
                     <div className="space-y-3">
-                      {todayAppts.map((appt) => (
+                      {filteredTodayAppts.map((appt) => (
                         <div
                           key={appt.id}
                           className="flex items-center justify-between p-4 bg-gradient-to-r from-gray-50 to-white rounded-xl border border-gray-100 hover:shadow-md transition-all duration-200 group"

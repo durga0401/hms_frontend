@@ -1,8 +1,14 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 
-const AdminNavbar = () => {
+const AdminNavbar = ({
+  searchValue = "",
+  onSearchChange,
+  searchPlaceholder = "Search users, doctors, appointments...",
+}) => {
   const { user } = useAuth();
+  const navigate = useNavigate();
 
   return (
     <nav className="bg-white/80 backdrop-blur-md shadow-sm border-b border-gray-100 px-6 py-4 sticky top-0 z-30">
@@ -22,8 +28,47 @@ const AdminNavbar = () => {
         </div>
 
         <div className="flex items-center space-x-4">
+          {/* Search Bar */}
+          {onSearchChange && (
+            <div className="hidden md:flex items-center bg-gray-50 rounded-xl px-4 py-2 border border-gray-100 focus-within:border-primary-300 focus-within:ring-2 focus-within:ring-primary-100 transition-all duration-200">
+              <svg
+                className="w-5 h-5 text-gray-400 mr-2"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                />
+              </svg>
+              <input
+                type="text"
+                placeholder={searchPlaceholder}
+                value={searchValue}
+                onChange={(e) => onSearchChange(e.target.value)}
+                className="bg-transparent border-none outline-none text-sm text-gray-600 placeholder-gray-400 w-64"
+              />
+              {searchValue && (
+                <button
+                  onClick={() => onSearchChange("")}
+                  className="ml-2 p-1 hover:bg-gray-200 rounded-full transition-colors"
+                >
+                  <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              )}
+            </div>
+          )}
+
           {/* Quick Actions */}
-          <button className="p-2.5 rounded-xl bg-gray-50 text-gray-500 hover:bg-primary-50 hover:text-primary-600 transition-all duration-200 relative group">
+          <button 
+            onClick={() => navigate("/admin/notifications")}
+            className="p-2.5 rounded-xl bg-gray-50 text-gray-500 hover:bg-primary-50 hover:text-primary-600 transition-all duration-200 relative group"
+          >
             <svg
               className="w-5 h-5"
               fill="none"
