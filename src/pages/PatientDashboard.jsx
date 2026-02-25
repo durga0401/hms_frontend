@@ -7,31 +7,47 @@ import Sidebar from "../components/layout/Sidebar";
 import { useAuth } from "../context/AuthContext";
 
 const DashboardHeader = ({ name }) => {
+  const getGreeting = () => {
+    const hour = new Date().getHours();
+    if (hour < 12) return "Good morning";
+    if (hour < 18) return "Good afternoon";
+    return "Good evening";
+  };
+
   return (
-    <div className="flex items-center justify-between mb-6">
+    <div className="flex items-center justify-between mb-8">
       <div>
-        <h1 className="text-2xl font-bold text-gray-900">
-          Welcome back{name ? `, ${name}` : ""}
+        <h1 className="text-3xl font-bold text-gray-900">
+          {getGreeting()}
+          {name ? `, ${name.split(" ")[0]}` : ""}! 👋
         </h1>
-        <p className="text-gray-500 text-sm">
-          Here is your health overview for today.
+        <p className="text-gray-500 mt-1">
+          Here's what's happening with your health today.
         </p>
       </div>
-      <div className="flex items-center gap-2 bg-white border border-gray-200 rounded-lg px-3 py-2 text-sm text-gray-600">
-        <svg
-          className="w-4 h-4 text-primary-600"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth="2"
-            d="M8 7V3m8 4V3m-9 8h10m-11 9h12a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
-          />
-        </svg>
-        {new Date().toLocaleDateString()}
+      <div className="hidden sm:flex items-center gap-3">
+        <div className="flex items-center gap-2 bg-white border border-gray-200 rounded-xl px-4 py-2.5 text-sm text-gray-600 shadow-sm">
+          <svg
+            className="w-5 h-5 text-primary-600"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="2"
+              d="M8 7V3m8 4V3m-9 8h10m-11 9h12a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
+            />
+          </svg>
+          <span className="font-medium">
+            {new Date().toLocaleDateString("en-US", {
+              weekday: "short",
+              month: "short",
+              day: "numeric",
+            })}
+          </span>
+        </div>
       </div>
     </div>
   );
@@ -43,49 +59,104 @@ const UpcomingAppointmentsList = ({
   onViewAll,
 }) => {
   return (
-    <Card className="p-0">
-      <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100">
-        <h3 className="font-semibold text-gray-800">Upcoming Appointments</h3>
+    <Card className="p-0 overflow-hidden">
+      <div className="flex items-center justify-between px-6 py-5 border-b border-gray-100 bg-gradient-to-r from-gray-50 to-white">
+        <div className="flex items-center gap-3">
+          <div className="p-2 bg-primary-100 rounded-lg">
+            <svg
+              className="w-5 h-5 text-primary-600"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+              />
+            </svg>
+          </div>
+          <h3 className="font-bold text-gray-800">Upcoming Appointments</h3>
+        </div>
         <button
-          className="text-primary-600 text-sm font-medium hover:text-primary-700"
+          className="text-primary-600 text-sm font-semibold hover:text-primary-700 flex items-center gap-1 transition-colors"
           onClick={onViewAll}
         >
-          View All →
+          View All
+          <svg
+            className="w-4 h-4"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M9 5l7 7-7 7"
+            />
+          </svg>
         </button>
       </div>
-      <div className="divide-y divide-gray-100">
+      <div className="divide-y divide-gray-50">
         {appointments.length === 0 && (
-          <div className="px-6 py-10 text-center text-gray-500">
-            No upcoming appointments found.
+          <div className="px-6 py-12 text-center">
+            <div className="w-16 h-16 bg-gray-100 rounded-full mx-auto mb-4 flex items-center justify-center">
+              <svg
+                className="w-8 h-8 text-gray-400"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                />
+              </svg>
+            </div>
+            <p className="text-gray-500 font-medium">
+              No upcoming appointments
+            </p>
+            <p className="text-gray-400 text-sm mt-1">
+              Book an appointment to get started
+            </p>
           </div>
         )}
         {appointments.map((appointment) => (
           <div
             key={appointment.id}
-            className="px-6 py-4 flex items-center justify-between"
+            className="px-6 py-4 flex items-center justify-between hover:bg-gray-50/50 transition-colors group"
           >
             <div className="flex items-center gap-4">
-              <div className="w-10 h-10 rounded-full bg-primary-100 text-primary-700 flex items-center justify-center font-semibold">
+              <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-primary-500 to-primary-700 text-white flex items-center justify-center font-bold text-lg shadow-lg shadow-primary-500/20">
                 {appointment.doctor_name?.[0] || "D"}
               </div>
               <div>
-                <p className="font-medium text-gray-800">
+                <p className="font-semibold text-gray-800">
                   Dr. {appointment.doctor_name}
                 </p>
-                <p className="text-xs text-gray-500">
-                  {appointment.specialization || "General"}
+                <p className="text-sm text-gray-500">
+                  {appointment.specialization || "General Practitioner"}
                 </p>
               </div>
             </div>
-            <div className="text-sm text-gray-600">
-              <p>{appointment.appointment_date}</p>
-              <p>{appointment.appointment_time}</p>
+            <div className="text-right">
+              <p className="font-medium text-gray-800">
+                {appointment.appointment_date}
+              </p>
+              <p className="text-sm text-primary-600 font-medium">
+                {appointment.appointment_time}
+              </p>
             </div>
             <Badge status={appointment.status} />
             <Button
               variant="outline"
               size="sm"
               onClick={() => onViewDetails(appointment)}
+              className="opacity-0 group-hover:opacity-100 transition-opacity"
             >
               View Details
             </Button>
@@ -102,17 +173,88 @@ const QuickActionButtons = ({
   onBrowseDoctors,
 }) => {
   return (
-    <Card className="p-4 space-y-3">
-      <h3 className="font-semibold text-gray-800">Quick Actions</h3>
-      <Button fullWidth onClick={onBook}>
-        Book New Appointment
-      </Button>
-      <Button fullWidth variant="secondary" onClick={onViewAppointments}>
-        View All Appointments
-      </Button>
-      <Button fullWidth variant="outline" onClick={onBrowseDoctors}>
-        Browse Doctors
-      </Button>
+    <Card className="p-5">
+      <h3 className="font-bold text-gray-800 mb-4 flex items-center gap-2">
+        <svg
+          className="w-5 h-5 text-primary-600"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M13 10V3L4 14h7v7l9-11h-7z"
+          />
+        </svg>
+        Quick Actions
+      </h3>
+      <div className="space-y-3">
+        <Button
+          fullWidth
+          variant="gradient"
+          onClick={onBook}
+          className="justify-start gap-3"
+        >
+          <svg
+            className="w-5 h-5"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M12 6v6m0 0v6m0-6h6m-6 0H6"
+            />
+          </svg>
+          Book New Appointment
+        </Button>
+        <Button
+          fullWidth
+          variant="secondary"
+          onClick={onViewAppointments}
+          className="justify-start gap-3"
+        >
+          <svg
+            className="w-5 h-5"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
+            />
+          </svg>
+          View All Appointments
+        </Button>
+        <Button
+          fullWidth
+          variant="outline"
+          onClick={onBrowseDoctors}
+          className="justify-start gap-3"
+        >
+          <svg
+            className="w-5 h-5"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
+            />
+          </svg>
+          Browse Doctors
+        </Button>
+      </div>
     </Card>
   );
 };
@@ -174,7 +316,12 @@ const PatientDashboard = () => {
           )}`,
         ),
       }))
-      .filter((appt) => appt.sortDate >= now && appt.status !== "CANCELLED" && appt.status !== "COMPLETED")
+      .filter(
+        (appt) =>
+          appt.sortDate >= now &&
+          appt.status !== "CANCELLED" &&
+          appt.status !== "COMPLETED",
+      )
       .sort((a, b) => a.sortDate - b.sortDate)
       .slice(0, 5);
 
@@ -224,25 +371,87 @@ const PatientDashboard = () => {
             </Card>
           ) : (
             <>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-                <Card>
-                  <p className="text-sm text-gray-500">Total Appointments</p>
-                  <p className="text-2xl font-bold text-gray-900">
-                    {stats.total}
-                  </p>
-                </Card>
-                <Card>
-                  <p className="text-sm text-gray-500">Upcoming</p>
-                  <p className="text-2xl font-bold text-gray-900">
-                    {stats.upcoming}
-                  </p>
-                </Card>
-                <Card>
-                  <p className="text-sm text-gray-500">Unread Notifications</p>
-                  <p className="text-2xl font-bold text-gray-900">
-                    {stats.unreadNotifications}
-                  </p>
-                </Card>
+              {/* Stats Cards */}
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                <div className="bg-gradient-to-br from-primary-500 to-primary-700 rounded-2xl p-6 text-white shadow-xl shadow-primary-500/20">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-primary-100 text-sm font-medium">
+                        Total Appointments
+                      </p>
+                      <p className="text-4xl font-bold mt-2">{stats.total}</p>
+                    </div>
+                    <div className="w-14 h-14 bg-white/20 rounded-2xl flex items-center justify-center">
+                      <svg
+                        className="w-7 h-7"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                        />
+                      </svg>
+                    </div>
+                  </div>
+                </div>
+                <div className="bg-gradient-to-br from-primary-600 to-primary-800 rounded-2xl p-6 text-white shadow-xl shadow-primary-600/20">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-primary-100 text-sm font-medium">
+                        Upcoming
+                      </p>
+                      <p className="text-4xl font-bold mt-2">
+                        {stats.upcoming}
+                      </p>
+                    </div>
+                    <div className="w-14 h-14 bg-white/20 rounded-2xl flex items-center justify-center">
+                      <svg
+                        className="w-7 h-7"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+                        />
+                      </svg>
+                    </div>
+                  </div>
+                </div>
+                <div className="bg-gradient-to-br from-accent-500 to-accent-700 rounded-2xl p-6 text-white shadow-xl shadow-accent-500/20">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-accent-100 text-sm font-medium">
+                        Notifications
+                      </p>
+                      <p className="text-4xl font-bold mt-2">
+                        {stats.unreadNotifications}
+                      </p>
+                    </div>
+                    <div className="w-14 h-14 bg-white/20 rounded-2xl flex items-center justify-center">
+                      <svg
+                        className="w-7 h-7"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"
+                        />
+                      </svg>
+                    </div>
+                  </div>
+                </div>
               </div>
 
               <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
@@ -252,6 +461,7 @@ const PatientDashboard = () => {
                     onViewDetails={(appointment) =>
                       setSelectedAppointment(appointment)
                     }
+                    onViewAll={() => navigate("/patient/appointments")}
                   />
                 </div>
                 <div className="space-y-6">
@@ -260,14 +470,39 @@ const PatientDashboard = () => {
                     onViewAppointments={() => navigate("/patient/appointments")}
                     onBrowseDoctors={() => navigate("/patient/doctors")}
                   />
-                  <Card className="bg-gradient-to-br from-primary-600 to-primary-800 text-white">
-                    <h3 className="font-semibold text-lg mb-2">Need Help?</h3>
-                    <p className="text-sm text-primary-100 mb-4">
-                      Our support team is available 24/7 to assist you with your
-                      medical inquiries.
-                    </p>
-                    <Button variant="secondary">Contact Support</Button>
-                  </Card>
+                  {/* Help Card */}
+                  <div className="bg-gradient-to-br from-primary-600 via-primary-700 to-primary-900 rounded-2xl p-6 text-white shadow-xl shadow-primary-500/20 relative overflow-hidden">
+                    <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -translate-y-1/2 translate-x-1/2"></div>
+                    <div className="absolute bottom-0 left-0 w-24 h-24 bg-white/10 rounded-full translate-y-1/2 -translate-x-1/2"></div>
+                    <div className="relative z-10">
+                      <div className="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center mb-4">
+                        <svg
+                          className="w-6 h-6"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-5 0a4 4 0 11-8 0 4 4 0 018 0z"
+                          />
+                        </svg>
+                      </div>
+                      <h3 className="font-bold text-xl mb-2">Need Help?</h3>
+                      <p className="text-white/80 text-sm mb-4 leading-relaxed">
+                        Our support team is available 24/7 to assist you with
+                        your medical inquiries.
+                      </p>
+                      <Button
+                        variant="secondary"
+                        className="bg-white text-primary-600 hover:bg-gray-100"
+                      >
+                        Contact Support
+                      </Button>
+                    </div>
+                  </div>
                 </div>
               </div>
             </>

@@ -105,20 +105,20 @@ const DoctorAppointments = () => {
 
   const handleUpdateStatus = async () => {
     if (!selectedAppt || !newStatus) return;
-    
+
     // Prevent completing appointment before the scheduled date
     if (newStatus === "COMPLETED") {
       const appointmentDate = new Date(selectedAppt.appointment_date);
       const today = new Date();
       today.setHours(0, 0, 0, 0);
       appointmentDate.setHours(0, 0, 0, 0);
-      
+
       if (appointmentDate > today) {
         alert("Cannot complete an appointment before the scheduled date");
         return;
       }
     }
-    
+
     try {
       setUpdating(true);
       await doctorAPI.updateAppointmentStatus(selectedAppt.id, newStatus);
@@ -162,9 +162,11 @@ const DoctorAppointments = () => {
       const today = new Date();
       today.setHours(0, 0, 0, 0);
       appointmentDate.setHours(0, 0, 0, 0);
-      
+
       if (appointmentDate > today) {
-        setPrescriptionError("Cannot add prescription before the scheduled appointment date");
+        setPrescriptionError(
+          "Cannot add prescription before the scheduled appointment date",
+        );
         return;
       }
     }

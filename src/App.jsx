@@ -12,27 +12,20 @@ const PatientAppointments = lazy(() => import("./pages/PatientAppointments"));
 const PatientDoctors = lazy(() => import("./pages/PatientDoctors"));
 const PatientSettings = lazy(() => import("./pages/PatientSettings"));
 const PatientProfile = lazy(() => import("./pages/PatientProfile"));
-const PatientNotifications = lazy(
-  () => import("./pages/PatientNotifications"),
-);
+const PatientNotifications = lazy(() => import("./pages/PatientNotifications"));
 const DoctorDashboard = lazy(() => import("./pages/DoctorDashboard"));
 const DoctorAppointments = lazy(() => import("./pages/DoctorAppointments"));
 const DoctorProfile = lazy(() => import("./pages/DoctorProfile"));
-const DoctorNotifications = lazy(
-  () => import("./pages/DoctorNotifications"),
-);
-const DoctorAvailability = lazy(
-  () => import("./pages/DoctorAvailability"),
-);
+const DoctorNotifications = lazy(() => import("./pages/DoctorNotifications"));
+const DoctorAvailability = lazy(() => import("./pages/DoctorAvailability"));
 const DoctorPatients = lazy(() => import("./pages/DoctorPatients"));
 const AdminDashboard = lazy(() => import("./pages/AdminDashboard"));
 const AdminUsers = lazy(() => import("./pages/AdminUsers"));
 const AdminDoctors = lazy(() => import("./pages/AdminDoctors"));
 const AdminAppointments = lazy(() => import("./pages/AdminAppointments"));
 const AdminReports = lazy(() => import("./pages/AdminReports"));
-const AdminNotifications = lazy(
-  () => import("./pages/AdminNotifications"),
-);
+const AdminNotifications = lazy(() => import("./pages/AdminNotifications"));
+const AdminSettings = lazy(() => import("./pages/AdminSettings"));
 
 const App = () => {
   return (
@@ -60,7 +53,11 @@ const App = () => {
             <Route path="/admin/doctors" element={<AdminDoctors />} />
             <Route path="/admin/appointments" element={<AdminAppointments />} />
             <Route path="/admin/reports" element={<AdminReports />} />
-            <Route path="/admin/notifications" element={<AdminNotifications />} />
+            <Route
+              path="/admin/notifications"
+              element={<AdminNotifications />}
+            />
+            <Route path="/admin/settings" element={<AdminSettings />} />
             <Route path="/doctor/dashboard" element={<DoctorDashboard />} />
             <Route
               path="/doctor/appointments"
