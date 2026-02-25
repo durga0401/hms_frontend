@@ -50,7 +50,7 @@ const AdminDashboard = () => {
     return recentAppointments.filter((appt) =>
       `${appt.patient_name || ""} ${appt.doctor_name || ""} ${appt.status || ""}`
         .toLowerCase()
-        .includes(term)
+        .includes(term),
     );
   }, [searchTerm, recentAppointments]);
 
@@ -316,7 +316,10 @@ const AdminDashboard = () => {
       <div className="min-h-screen bg-gray-50">
         <AdminSidebar />
         <div className="lg:ml-64">
-          <AdminNavbar searchValue={searchTerm} onSearchChange={setSearchTerm} />
+          <AdminNavbar
+            searchValue={searchTerm}
+            onSearchChange={setSearchTerm}
+          />
           <div className="p-6 flex items-center justify-center h-96">
             <div className="flex flex-col items-center gap-4">
               <div className="relative">

@@ -64,7 +64,7 @@ const DoctorDashboard = () => {
     return todayAppts.filter((appt) =>
       `${appt.patient_name || ""} ${appt.reason || ""} ${appt.status || ""}`
         .toLowerCase()
-        .includes(term)
+        .includes(term),
     );
   }, [searchTerm, todayAppts]);
 
@@ -90,8 +90,8 @@ const DoctorDashboard = () => {
     <div className="min-h-screen bg-gray-50 flex">
       <DoctorSidebar user={user} />
       <div className="flex-1">
-        <DoctorNavbar 
-          title="Dashboard" 
+        <DoctorNavbar
+          title="Dashboard"
           searchValue={searchTerm}
           onSearchChange={setSearchTerm}
           searchPlaceholder="Search patients..."
@@ -246,7 +246,8 @@ const DoctorDashboard = () => {
                       Today's Schedule
                       {searchTerm && (
                         <span className="ml-2 text-sm font-normal text-gray-500">
-                          ({filteredTodayAppts.length} results for "{searchTerm}")
+                          ({filteredTodayAppts.length} results for "{searchTerm}
+                          ")
                         </span>
                       )}
                     </h2>
@@ -274,10 +275,14 @@ const DoctorDashboard = () => {
                         </svg>
                       </div>
                       <p className="text-gray-500 font-medium">
-                        {searchTerm ? "No patients found matching your search" : "No appointments scheduled for today"}
+                        {searchTerm
+                          ? "No patients found matching your search"
+                          : "No appointments scheduled for today"}
                       </p>
                       <p className="text-gray-400 text-sm mt-1">
-                        {searchTerm ? "Try a different search term" : "Enjoy your free time!"}
+                        {searchTerm
+                          ? "Try a different search term"
+                          : "Enjoy your free time!"}
                       </p>
                     </div>
                   ) : (
