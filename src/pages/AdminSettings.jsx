@@ -14,6 +14,7 @@ const AdminSettings = () => {
   });
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState({ type: "", text: "" });
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   useEffect(() => {
     setProfile({
@@ -69,10 +70,10 @@ const AdminSettings = () => {
 
   return (
     <div className="min-h-screen bg-gray-100">
-      <AdminSidebar />
+      <AdminSidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
       <div className="lg:ml-64">
-        <AdminNavbar title="Settings" />
-        <main className="p-6">
+        <AdminNavbar title="Settings" onMenuClick={() => setSidebarOpen(true)} />
+        <main className="p-4 sm:p-6">
           <div className="max-w-3xl space-y-6">
             <div>
               <h1 className="text-2xl font-semibold text-gray-800">

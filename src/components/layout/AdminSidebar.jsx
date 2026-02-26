@@ -2,7 +2,7 @@ import React from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 
-const AdminSidebar = () => {
+const AdminSidebar = ({ isOpen = false, onClose }) => {
   const { logout } = useAuth();
   const navigate = useNavigate();
 
@@ -154,10 +154,35 @@ const AdminSidebar = () => {
   ];
 
   return (
-    <div className="h-screen w-64 bg-white border-r border-gray-100 fixed left-0 top-0 z-40 flex flex-col shadow-xl">
-      {/* Logo Header with gradient */}
-      <div className="p-6 bg-gradient-to-r from-primary-600 to-primary-800">
-        <div className="flex items-center gap-3">
+    <>
+      {/* Mobile overlay backdrop */}
+      {isOpen && (
+        <div
+          className="fixed inset-0 bg-black/50 z-40 lg:hidden"
+          onClick={onClose}
+        />
+      )}
+      
+      {/* Sidebar */}
+      <div className={`
+        h-screen w-64 bg-white border-r border-gray-100 fixed left-0 top-0 z-50 flex flex-col shadow-xl
+        transform transition-transform duration-300 ease-in-out
+        ${isOpen ? 'translate-x-0' : '-translate-x-full'}
+        lg:translate-x-0
+      `}>
+        {/* Mobile close button */}
+        <button
+          onClick={onClose}
+          className="lg:hidden absolute top-4 right-4 p-2 rounded-lg hover:bg-gray-100 text-gray-500 z-50"
+        >
+          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+        
+        {/* Logo Header with gradient */}
+        <div className="p-6 bg-gradient-to-r from-primary-600 to-primary-800">
+          <div className="flex items-center gap-3">
           <div className="w-12 h-12 rounded-xl bg-white/20 backdrop-blur-sm text-white flex items-center justify-center font-bold text-xl shadow-lg">
             <svg className="w-7 h-7" fill="currentColor" viewBox="0 0 24 24">
               <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-2 10h-4v4h-2v-4H7v-2h4V7h2v4h4v2z" />
@@ -220,6 +245,7 @@ const AdminSidebar = () => {
         </button>
       </div>
     </div>
+    </>
   );
 };
 

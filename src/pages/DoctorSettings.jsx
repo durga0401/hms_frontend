@@ -16,6 +16,7 @@ const DoctorSettings = () => {
   const [loading, setLoading] = useState(false);
   const [profileMsg, setProfileMsg] = useState({ type: "", text: "" });
   const [passwordMsg, setPasswordMsg] = useState({ type: "", text: "" });
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   useEffect(() => {
     fetchProfile();
@@ -97,11 +98,11 @@ const DoctorSettings = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 flex">
-      <DoctorSidebar user={user} />
-      <div className="flex-1">
-        <DoctorNavbar title="Settings" />
-        <main className="p-6">
+    <div className="min-h-screen bg-gray-50">
+      <DoctorSidebar user={user} isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
+      <div className="lg:ml-64">
+        <DoctorNavbar title="Settings" onMenuClick={() => setSidebarOpen(true)} />
+        <main className="p-4 sm:p-6">
           <div className="max-w-2xl space-y-6">
             {/* Profile Settings */}
             <Card>

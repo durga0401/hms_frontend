@@ -1,7 +1,7 @@
 import { NavLink, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 
-const Sidebar = ({ user }) => {
+const Sidebar = ({ user, isOpen = false, onClose }) => {
   const navigate = useNavigate();
   const { logout } = useAuth();
   const name = user?.name || "Patient";
@@ -136,8 +136,23 @@ const Sidebar = ({ user }) => {
     },
   ];
 
-  return (
-    <aside className="w-64 bg-white border-r border-gray-100 h-screen sticky top-0 flex flex-col shadow-soft">
+  const handleNavClick = () => {
+    if (onClose) onClose();
+  };
+
+  const sidebarContent = (
+    <aside className="w-64 bg-white border-r border-gray-100 h-screen flex flex-col shadow-soft">
+      {/* Close button for mobile */}
+      <button
+        onClick={onClose}
+        className="lg:hidden absolute top-4 right-4 p-2 rounded-lg bg-gray-100 hover:bg-gray-200 text-gray-500 z-50"
+        aria-label="Close menu"
+      >
+        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </button>
+
       {/* Logo */}
       <div className="p-6 border-b border-gray-100 bg-gradient-to-r from-primary-50 to-white">
         <div className="flex items-center gap-3">
@@ -173,6 +188,7 @@ const Sidebar = ({ user }) => {
           <NavLink
             key={item.label}
             to={item.to}
+            onClick={handleNavClick}
             className={({ isActive }) =>
               `w-full flex items-center gap-3 px-4 py-3 rounded-xl text-left text-sm font-medium transition-all duration-200 group ${
                 isActive
@@ -235,6 +251,25 @@ const Sidebar = ({ user }) => {
         </button>
       </div>
     </aside>
+  );
+
+  return (
+    <>
+      {/* Desktop sidebar */}
+      <div className="hidden lg:block sticky top-0 h-screen">
+        {sidebarContent}
+      </div>
+
+      {/* Mobile sidebar overlay */}
+      {isOpen && (
+        <div className="lg:hidden fixed inset-0 z-50">
+          <div className="absolute inset-0 bg-gray-900/50" onClick={onClose} />
+          <div className="relative h-full w-64 transform transition-transform duration-300">
+            {sidebarContent}
+          </div>
+        </div>
+      )}
+    </>
   );
 };
 

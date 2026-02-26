@@ -15,9 +15,9 @@ const DashboardHeader = ({ name }) => {
   };
 
   return (
-    <div className="flex items-center justify-between mb-8">
+    <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-6 sm:mb-8 gap-4">
       <div>
-        <h1 className="text-3xl font-bold text-gray-900">
+        <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">
           {getGreeting()}
           {name ? `, ${name.split(" ")[0]}` : ""}! 👋
         </h1>
@@ -362,17 +362,20 @@ const PatientDashboard = () => {
     return { total, upcoming, unreadNotifications };
   }, [appointments, upcomingAppointments]);
 
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+
   return (
-    <div className="min-h-screen bg-gray-50 flex">
-      <Sidebar user={profile || user} />
-      <div className="flex-1">
+    <div className="min-h-screen bg-gray-50">
+      <Sidebar user={profile || user} isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
+      <div className="lg:ml-64">
         <Navbar
           title="Patient Dashboard"
           searchValue={searchTerm}
           onSearchChange={setSearchTerm}
           onNewAppointment={() => navigate("/patient/appointments/book")}
+          onMenuClick={() => setSidebarOpen(true)}
         />
-        <main className="p-6">
+        <main className="p-4 sm:p-6">
           <DashboardHeader name={profile?.name || user?.name} />
 
           {error && (

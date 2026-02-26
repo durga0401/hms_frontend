@@ -19,6 +19,7 @@ const AdminUsers = () => {
   const [success, setSuccess] = useState("");
   const [activeTab, setActiveTab] = useState("all");
   const [searchTerm, setSearchTerm] = useState("");
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   // Modal states
   const [showAddModal, setShowAddModal] = useState(false);
@@ -219,10 +220,10 @@ const AdminUsers = () => {
 
   return (
     <div className="min-h-screen bg-gray-100">
-      <AdminSidebar />
+      <AdminSidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
       <div className="lg:ml-64">
-        <AdminNavbar />
-        <div className="p-6">
+        <AdminNavbar onMenuClick={() => setSidebarOpen(true)} />
+        <div className="p-4 sm:p-6">
           {/* Page Header */}
           <div className="flex items-center justify-between mb-6">
             <div>

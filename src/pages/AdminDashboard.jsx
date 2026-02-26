@@ -12,6 +12,7 @@ const AdminDashboard = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   useEffect(() => {
     fetchDashboardData();
@@ -314,13 +315,14 @@ const AdminDashboard = () => {
   if (loading) {
     return (
       <div className="min-h-screen bg-gray-50">
-        <AdminSidebar />
+        <AdminSidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
         <div className="lg:ml-64">
           <AdminNavbar
             searchValue={searchTerm}
             onSearchChange={setSearchTerm}
+            onMenuClick={() => setSidebarOpen(true)}
           />
-          <div className="p-6 flex items-center justify-center h-96">
+          <div className="p-4 sm:p-6 flex items-center justify-center h-96">
             <div className="flex flex-col items-center gap-4">
               <div className="relative">
                 <div className="w-16 h-16 border-4 border-rose-200 rounded-full animate-spin border-t-rose-600"></div>
@@ -335,10 +337,10 @@ const AdminDashboard = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <AdminSidebar />
+      <AdminSidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
       <div className="lg:ml-64">
-        <AdminNavbar searchValue={searchTerm} onSearchChange={setSearchTerm} />
-        <div className="p-6">
+        <AdminNavbar searchValue={searchTerm} onSearchChange={setSearchTerm} onMenuClick={() => setSidebarOpen(true)} />
+        <div className="p-4 sm:p-6">
           {/* Page Header */}
           <div className="mb-8">
             <div className="flex items-center justify-between">

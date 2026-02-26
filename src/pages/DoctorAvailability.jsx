@@ -24,6 +24,7 @@ const DoctorAvailability = () => {
   });
   const [submitting, setSubmitting] = useState(false);
   const [message, setMessage] = useState({ type: "", text: "" });
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   useEffect(() => {
     fetchSlots();
@@ -114,11 +115,11 @@ const DoctorAvailability = () => {
   });
 
   return (
-    <div className="min-h-screen bg-gray-50 flex">
-      <DoctorSidebar user={user} />
-      <div className="flex-1">
-        <DoctorNavbar title="Availability" />
-        <main className="p-6">
+    <div className="min-h-screen bg-gray-50">
+      <DoctorSidebar user={user} isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
+      <div className="lg:ml-64">
+        <DoctorNavbar title="Availability" onMenuClick={() => setSidebarOpen(true)} />
+        <main className="p-4 sm:p-6">
           <div className="max-w-4xl space-y-6">
             {/* Add Availability Form */}
             <Card>

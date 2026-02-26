@@ -82,6 +82,7 @@ const PatientDoctors = () => {
   const [availability, setAvailability] = useState([]);
   const [availabilityLoading, setAvailabilityLoading] = useState(false);
   const [selectedDate, setSelectedDate] = useState("");
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const normalizeDate = (dateValue) => {
     if (!dateValue) return "";
@@ -162,11 +163,11 @@ const PatientDoctors = () => {
   }, [availability, selectedDate]);
 
   return (
-    <div className="min-h-screen bg-gray-50 flex">
-      <Sidebar user={user} />
-      <div className="flex-1">
-        <Navbar title="Browse Doctors" />
-        <main className="p-6">
+    <div className="min-h-screen bg-gray-50">
+      <Sidebar user={user} isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
+      <div className="lg:ml-64">
+        <Navbar title="Browse Doctors" onMenuClick={() => setSidebarOpen(true)} />
+        <main className="p-4 sm:p-6">
           <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 mb-6">
             <div>
               <h1 className="text-2xl font-semibold text-gray-800">

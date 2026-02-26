@@ -6,6 +6,7 @@ const Navbar = ({
   onSearchChange,
   onNewAppointment,
   onNotificationsClick,
+  onMenuClick,
   showSearch = true,
   showNewAppointment = true,
 }) => {
@@ -28,18 +29,28 @@ const Navbar = ({
   };
 
   return (
-    <header className="bg-white/80 backdrop-blur-lg border-b border-gray-100 px-6 py-4 sticky top-0 z-30">
+    <header className="bg-white/80 backdrop-blur-lg border-b border-gray-100 px-4 sm:px-6 py-4 sticky top-0 z-30">
       <div className="flex items-center justify-between">
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-3">
+          {/* Hamburger menu for mobile */}
+          <button
+            onClick={onMenuClick}
+            className="lg:hidden p-2 rounded-xl bg-gray-50 hover:bg-gray-100 text-gray-600"
+            aria-label="Open menu"
+          >
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+            </svg>
+          </button>
           <div>
             <p className="text-xs font-medium text-primary-600 uppercase tracking-wider">
               Patient Portal
             </p>
-            <h2 className="text-xl font-bold text-gray-900">{title}</h2>
+            <h2 className="text-lg sm:text-xl font-bold text-gray-900">{title}</h2>
           </div>
         </div>
 
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2 sm:gap-3">
           {/* Search bar */}
           {showSearch && onSearchChange && (
             <div className="relative hidden md:block">

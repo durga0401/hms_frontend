@@ -13,7 +13,8 @@ const PatientSettings = () => {
     newPassword: "",
   });
   const [loading, setLoading] = useState(false);
-  const [message, setMessage] = useState({ type: "", text: "‘" });
+  const [message, setMessage] = useState({ type: "", text: "'" });
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   useEffect(() => {
     setProfile({
@@ -68,11 +69,11 @@ const PatientSettings = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 flex">
-      <Sidebar user={user} />
-      <div className="flex-1">
-        <Navbar title="Settings" />
-        <main className="p-6">
+    <div className="min-h-screen bg-gray-50">
+      <Sidebar user={user} isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
+      <div className="lg:ml-64">
+        <Navbar title="Settings" onMenuClick={() => setSidebarOpen(true)} />
+        <main className="p-4 sm:p-6">
           <div className="max-w-3xl space-y-6">
             <div>
               <h1 className="text-2xl font-semibold text-gray-800">Settings</h1>

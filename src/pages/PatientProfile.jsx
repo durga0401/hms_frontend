@@ -16,6 +16,7 @@ const PatientProfile = () => {
   const [loading, setLoading] = useState(false);
   const [profileMsg, setProfileMsg] = useState({ type: "", text: "" });
   const [passwordMsg, setPasswordMsg] = useState({ type: "", text: "" });
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   useEffect(() => {
     setProfile({
@@ -94,11 +95,11 @@ const PatientProfile = () => {
     .toUpperCase();
 
   return (
-    <div className="min-h-screen bg-gray-50 flex">
-      <Sidebar user={user} />
-      <div className="flex-1">
-        <Navbar title="Profile" showSearch={false} />
-        <main className="p-6">
+    <div className="min-h-screen bg-gray-50">
+      <Sidebar user={user} isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
+      <div className="lg:ml-64">
+        <Navbar title="Profile" showSearch={false} onMenuClick={() => setSidebarOpen(true)} />
+        <main className="p-4 sm:p-6">
           <div className="max-w-3xl space-y-6">
             {/* Profile Header */}
             <Card>

@@ -10,6 +10,7 @@ const DoctorPatients = () => {
   const [appointments, setAppointments] = useState([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   useEffect(() => {
     fetchAppointments();
@@ -68,11 +69,11 @@ const DoctorPatients = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 flex">
-      <DoctorSidebar user={user} />
-      <div className="flex-1">
-        <DoctorNavbar title="Patients" />
-        <main className="p-6">
+    <div className="min-h-screen bg-gray-50">
+      <DoctorSidebar user={user} isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
+      <div className="lg:ml-64">
+        <DoctorNavbar title="Patients" onMenuClick={() => setSidebarOpen(true)} />
+        <main className="p-4 sm:p-6">
           <div className="max-w-4xl space-y-6">
             {/* Search */}
             <Card>

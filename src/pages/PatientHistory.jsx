@@ -7,6 +7,7 @@ import { useAuth } from "../context/AuthContext";
 const PatientHistory = () => {
   const { user } = useAuth();
   const [filter, setFilter] = useState("ALL");
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const historyItems = [];
 
@@ -16,11 +17,11 @@ const PatientHistory = () => {
   }, [filter, historyItems]);
 
   return (
-    <div className="min-h-screen bg-gray-50 flex">
-      <Sidebar user={user} />
-      <div className="flex-1">
-        <Navbar title="History" />
-        <main className="p-6">
+    <div className="min-h-screen bg-gray-50">
+      <Sidebar user={user} isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
+      <div className="lg:ml-64">
+        <Navbar title="History" onMenuClick={() => setSidebarOpen(true)} />
+        <main className="p-4 sm:p-6">
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
             <div>
               <h1 className="text-2xl font-semibold text-gray-800">

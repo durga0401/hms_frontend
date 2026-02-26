@@ -11,6 +11,7 @@ const AdminAppointments = () => {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [expandedId, setExpandedId] = useState(null);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const toggleDetails = (id) => {
     setExpandedId(expandedId === id ? null : id);
@@ -167,10 +168,10 @@ const AdminAppointments = () => {
 
   return (
     <div className="min-h-screen bg-gray-100">
-      <AdminSidebar />
+      <AdminSidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
       <div className="lg:ml-64">
-        <AdminNavbar />
-        <div className="p-6">
+        <AdminNavbar onMenuClick={() => setSidebarOpen(true)} />
+        <div className="p-4 sm:p-6">
           {/* Page Header */}
           <div className="mb-6">
             <h1 className="text-2xl font-bold text-gray-800">

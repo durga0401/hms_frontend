@@ -18,6 +18,7 @@ const DoctorNotifications = () => {
   const [notifications, setNotifications] = useState([]);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState("All");
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const fetchNotifications = async () => {
     try {
@@ -74,11 +75,11 @@ const DoctorNotifications = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 flex">
-      <DoctorSidebar user={user} />
-      <div className="flex-1">
-        <DoctorNavbar title="Notifications" />
-        <main className="p-6">
+    <div className="min-h-screen bg-gray-50">
+      <DoctorSidebar user={user} isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
+      <div className="lg:ml-64">
+        <DoctorNavbar title="Notifications" onMenuClick={() => setSidebarOpen(true)} />
+        <main className="p-4 sm:p-6">
           <div className="max-w-3xl space-y-6">
             {/* Header */}
             <div className="flex items-center justify-between">

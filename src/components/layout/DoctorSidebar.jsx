@@ -1,7 +1,7 @@
 import { NavLink, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 
-const DoctorSidebar = ({ user }) => {
+const DoctorSidebar = ({ user, isOpen = false, onClose }) => {
   const navigate = useNavigate();
   const { logout } = useAuth();
   const name = user?.name || "Doctor";
@@ -131,9 +131,34 @@ const DoctorSidebar = ({ user }) => {
   ];
 
   return (
-    <aside className="w-64 bg-white border-r border-gray-100 h-screen sticky top-0 shadow-xl flex flex-col">
-      {/* Header with gradient */}
-      <div className="p-6 bg-gradient-to-r from-primary-600 to-primary-800">
+    <>
+      {/* Mobile overlay backdrop */}
+      {isOpen && (
+        <div
+          className="fixed inset-0 bg-black/50 z-40 lg:hidden"
+          onClick={onClose}
+        />
+      )}
+      
+      {/* Sidebar */}
+      <aside className={`
+        fixed top-0 left-0 h-screen w-64 bg-white border-r border-gray-100 shadow-xl flex flex-col z-50
+        transform transition-transform duration-300 ease-in-out
+        ${isOpen ? 'translate-x-0' : '-translate-x-full'}
+        lg:translate-x-0
+      `}>
+        {/* Mobile close button */}
+        <button
+          onClick={onClose}
+          className="lg:hidden absolute top-4 right-4 p-2 rounded-lg hover:bg-gray-100 text-gray-500 z-50"
+        >
+          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+        
+        {/* Header with gradient */}
+        <div className="p-6 bg-gradient-to-r from-primary-600 to-primary-800">
         <div className="flex items-center gap-3">
           <div className="w-12 h-12 rounded-xl bg-white/20 backdrop-blur-sm text-white flex items-center justify-center font-bold text-xl shadow-lg">
             <svg className="w-7 h-7" fill="currentColor" viewBox="0 0 24 24">
@@ -216,6 +241,7 @@ const DoctorSidebar = ({ user }) => {
         </button>
       </div>
     </aside>
+    </>
   );
 };
 

@@ -19,6 +19,7 @@ const DoctorDashboard = () => {
   const [appointments, setAppointments] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   useEffect(() => {
     fetchAppointments();
@@ -87,16 +88,17 @@ const DoctorDashboard = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 flex">
-      <DoctorSidebar user={user} />
-      <div className="flex-1">
+    <div className="min-h-screen bg-gray-50">
+      <DoctorSidebar user={user} isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
+      <div className="lg:ml-64">
         <DoctorNavbar
           title="Dashboard"
           searchValue={searchTerm}
           onSearchChange={setSearchTerm}
           searchPlaceholder="Search patients..."
+          onMenuClick={() => setSidebarOpen(true)}
         />
-        <main className="p-6">
+        <main className="p-4 sm:p-6">
           {/* Header */}
           <div className="mb-8">
             <h1 className="text-3xl font-bold text-gray-800">

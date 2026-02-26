@@ -31,6 +31,7 @@ const DoctorAppointments = () => {
   const [newStatus, setNewStatus] = useState("");
   const [updating, setUpdating] = useState(false);
   const [expandedId, setExpandedId] = useState(null);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   // Prescription state
   const [prescriptionAppt, setPrescriptionAppt] = useState(null);
@@ -204,11 +205,11 @@ const DoctorAppointments = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 flex">
-      <DoctorSidebar user={user} />
-      <div className="flex-1">
-        <DoctorNavbar title="Appointments" />
-        <main className="p-6">
+    <div className="min-h-screen bg-gray-50">
+      <DoctorSidebar user={user} isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
+      <div className="lg:ml-64">
+        <DoctorNavbar title="Appointments" onMenuClick={() => setSidebarOpen(true)} />
+        <main className="p-4 sm:p-6">
           <div className="space-y-6">
             {/* Tabs */}
             <div className="flex items-center gap-4 border-b border-gray-200">

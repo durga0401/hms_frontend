@@ -486,6 +486,7 @@ const AdminNotifications = () => {
   const { user } = useAuth();
   const [notifications, setNotifications] = useState([]);
   const [refreshKey, setRefreshKey] = useState(0);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   useEffect(() => {
     const fetchNotifications = async () => {
@@ -504,10 +505,10 @@ const AdminNotifications = () => {
 
   return (
     <div className="min-h-screen bg-gray-100">
-      <AdminSidebar />
+      <AdminSidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
       <div className="lg:ml-64">
-        <AdminNavbar />
-        <main className="p-6">
+        <AdminNavbar onMenuClick={() => setSidebarOpen(true)} />
+        <main className="p-4 sm:p-6">
           <div className="max-w-5xl space-y-6">
             {/* Page Header */}
             <div>

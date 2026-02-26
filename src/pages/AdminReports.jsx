@@ -8,6 +8,7 @@ const AdminReports = () => {
   const [activeTab, setActiveTab] = useState("appointments");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   // Report data
   const [appointmentsReport, setAppointmentsReport] = useState(null);
@@ -652,10 +653,10 @@ const AdminReports = () => {
 
   return (
     <div className="min-h-screen bg-gray-100">
-      <AdminSidebar />
+      <AdminSidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
       <div className="lg:ml-64">
-        <AdminNavbar />
-        <div className="p-6">
+        <AdminNavbar onMenuClick={() => setSidebarOpen(true)} />
+        <div className="p-4 sm:p-6">
           {/* Page Header */}
           <div className="mb-6">
             <h1 className="text-2xl font-bold text-gray-800">

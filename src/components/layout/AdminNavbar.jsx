@@ -6,25 +6,38 @@ const AdminNavbar = ({
   searchValue = "",
   onSearchChange,
   searchPlaceholder = "Search users, doctors, appointments...",
+  onMenuClick,
 }) => {
   const { user } = useAuth();
   const navigate = useNavigate();
 
   return (
-    <nav className="bg-white/80 backdrop-blur-md shadow-sm border-b border-gray-100 px-6 py-4 sticky top-0 z-30">
+    <nav className="bg-white/80 backdrop-blur-md shadow-sm border-b border-gray-100 px-4 sm:px-6 py-4 sticky top-0 z-30">
       <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-xl font-bold text-gray-800 flex items-center gap-2">
-            <span className="bg-gradient-to-r from-primary-600 to-primary-800 bg-clip-text text-transparent">
-              Admin Portal
-            </span>
-            <span className="px-2 py-0.5 bg-primary-100 text-primary-600 text-xs font-semibold rounded-full">
-              HMS
-            </span>
-          </h1>
-          <p className="text-sm text-gray-500 mt-0.5">
-            Hospital Management System
-          </p>
+        <div className="flex items-center gap-3">
+          {/* Mobile hamburger menu */}
+          <button
+            onClick={onMenuClick}
+            className="lg:hidden p-2 rounded-lg hover:bg-gray-100 text-gray-600"
+          >
+            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+            </svg>
+          </button>
+          
+          <div>
+            <h1 className="text-lg sm:text-xl font-bold text-gray-800 flex items-center gap-2">
+              <span className="bg-gradient-to-r from-primary-600 to-primary-800 bg-clip-text text-transparent">
+                Admin Portal
+              </span>
+              <span className="px-2 py-0.5 bg-primary-100 text-primary-600 text-xs font-semibold rounded-full hidden sm:inline">
+                HMS
+              </span>
+            </h1>
+            <p className="text-sm text-gray-500 mt-0.5 hidden sm:block">
+              Hospital Management System
+            </p>
+          </div>
         </div>
 
         <div className="flex items-center space-x-4">
