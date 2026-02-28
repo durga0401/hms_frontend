@@ -164,9 +164,16 @@ const PatientDoctors = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <Sidebar user={user} isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
+      <Sidebar
+        user={user}
+        isOpen={sidebarOpen}
+        onClose={() => setSidebarOpen(false)}
+      />
       <div className="lg:ml-64">
-        <Navbar title="Browse Doctors" onMenuClick={() => setSidebarOpen(true)} />
+        <Navbar
+          title="Browse Doctors"
+          onMenuClick={() => setSidebarOpen(true)}
+        />
         <main className="p-4 sm:p-6">
           <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 mb-6">
             <div>

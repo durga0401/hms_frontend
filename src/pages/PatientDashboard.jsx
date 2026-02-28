@@ -366,7 +366,11 @@ const PatientDashboard = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <Sidebar user={profile || user} isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
+      <Sidebar
+        user={profile || user}
+        isOpen={sidebarOpen}
+        onClose={() => setSidebarOpen(false)}
+      />
       <div className="lg:ml-64">
         <Navbar
           title="Patient Dashboard"

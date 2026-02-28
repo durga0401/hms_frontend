@@ -206,9 +206,16 @@ const DoctorAppointments = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <DoctorSidebar user={user} isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
+      <DoctorSidebar
+        user={user}
+        isOpen={sidebarOpen}
+        onClose={() => setSidebarOpen(false)}
+      />
       <div className="lg:ml-64">
-        <DoctorNavbar title="Appointments" onMenuClick={() => setSidebarOpen(true)} />
+        <DoctorNavbar
+          title="Appointments"
+          onMenuClick={() => setSidebarOpen(true)}
+        />
         <main className="p-4 sm:p-6">
           <div className="space-y-6">
             {/* Tabs */}

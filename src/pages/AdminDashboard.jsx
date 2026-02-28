@@ -315,7 +315,10 @@ const AdminDashboard = () => {
   if (loading) {
     return (
       <div className="min-h-screen bg-gray-50">
-        <AdminSidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
+        <AdminSidebar
+          isOpen={sidebarOpen}
+          onClose={() => setSidebarOpen(false)}
+        />
         <div className="lg:ml-64">
           <AdminNavbar
             searchValue={searchTerm}
@@ -337,9 +340,16 @@ const AdminDashboard = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <AdminSidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
+      <AdminSidebar
+        isOpen={sidebarOpen}
+        onClose={() => setSidebarOpen(false)}
+      />
       <div className="lg:ml-64">
-        <AdminNavbar searchValue={searchTerm} onSearchChange={setSearchTerm} onMenuClick={() => setSidebarOpen(true)} />
+        <AdminNavbar
+          searchValue={searchTerm}
+          onSearchChange={setSearchTerm}
+          onMenuClick={() => setSidebarOpen(true)}
+        />
         <div className="p-4 sm:p-6">
           {/* Page Header */}
           <div className="mb-8">

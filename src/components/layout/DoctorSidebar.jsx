@@ -139,93 +139,23 @@ const DoctorSidebar = ({ user, isOpen = false, onClose }) => {
           onClick={onClose}
         />
       )}
-      
+
       {/* Sidebar */}
-      <aside className={`
+      <aside
+        className={`
         fixed top-0 left-0 h-screen w-64 bg-white border-r border-gray-100 shadow-xl flex flex-col z-50
         transform transition-transform duration-300 ease-in-out
-        ${isOpen ? 'translate-x-0' : '-translate-x-full'}
+        ${isOpen ? "translate-x-0" : "-translate-x-full"}
         lg:translate-x-0
-      `}>
+      `}
+      >
         {/* Mobile close button */}
         <button
           onClick={onClose}
           className="lg:hidden absolute top-4 right-4 p-2 rounded-lg hover:bg-gray-100 text-gray-500 z-50"
         >
-          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-          </svg>
-        </button>
-        
-        {/* Header with gradient */}
-        <div className="p-6 bg-gradient-to-r from-primary-600 to-primary-800">
-        <div className="flex items-center gap-3">
-          <div className="w-12 h-12 rounded-xl bg-white/20 backdrop-blur-sm text-white flex items-center justify-center font-bold text-xl shadow-lg">
-            <svg className="w-7 h-7" fill="currentColor" viewBox="0 0 24 24">
-              <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-2 10h-4v4h-2v-4H7v-2h4V7h2v4h4v2z" />
-            </svg>
-          </div>
-          <div>
-            <h1 className="text-lg font-bold text-white tracking-wide">
-              MediCare
-            </h1>
-            <p className="text-xs text-primary-100 font-medium">
-              Doctor Portal
-            </p>
-          </div>
-        </div>
-      </div>
-
-      {/* Navigation */}
-      <nav className="flex-1 px-3 py-6 space-y-1 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-200">
-        {/* <p className="px-4 text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3">
-          Main Menu
-        </p> */}
-        {items.map((item) => (
-          <NavLink
-            key={item.label}
-            to={item.to}
-            className={({ isActive }) =>
-              `group w-full flex items-center gap-3 px-4 py-3 rounded-xl text-left text-sm font-medium transition-all duration-200 ${
-                isActive
-                  ? "bg-gradient-to-r from-primary-500 to-primary-700 text-white shadow-lg shadow-primary-500/30 scale-[1.02]"
-                  : "text-gray-600 hover:bg-primary-50 hover:text-primary-600 hover:translate-x-1"
-              }`
-            }
-          >
-            <span className="transition-transform group-hover:scale-110">
-              {item.icon}
-            </span>
-            {item.label}
-          </NavLink>
-        ))}
-      </nav>
-
-      {/* User Profile Card */}
-      <div className="p-4 border-t border-gray-100 bg-gray-50/50">
-        <div className="bg-gradient-to-br from-primary-50 to-primary-100 rounded-xl p-4 flex items-center gap-3 border border-primary-100">
-          <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-primary-500 to-primary-700 text-white flex items-center justify-center font-bold shadow-lg shadow-primary-500/30">
-            {initials || "DR"}
-          </div>
-          <div className="flex-1 min-w-0">
-            <p className="text-sm font-semibold text-gray-800 truncate">
-              {name}
-            </p>
-            <p className="text-xs text-primary-600 truncate">
-              {user?.email || ""}
-            </p>
-          </div>
-        </div>
-        <button
-          type="button"
-          onClick={() => {
-            logout();
-            navigate("/login");
-          }}
-          className="mt-4 w-full group flex items-center justify-center gap-2 px-4 py-3 text-sm font-medium text-gray-600 border-2 border-gray-200 rounded-xl hover:border-primary-300 hover:bg-primary-50 hover:text-primary-600 transition-all duration-200"
-        >
           <svg
-            className="w-5 h-5 transition-transform group-hover:-translate-x-1"
+            className="w-5 h-5"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -234,13 +164,95 @@ const DoctorSidebar = ({ user, isOpen = false, onClose }) => {
               strokeLinecap="round"
               strokeLinejoin="round"
               strokeWidth={2}
-              d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
+              d="M6 18L18 6M6 6l12 12"
             />
           </svg>
-          <span>Logout</span>
         </button>
-      </div>
-    </aside>
+
+        {/* Header with gradient */}
+        <div className="p-6 bg-gradient-to-r from-primary-600 to-primary-800">
+          <div className="flex items-center gap-3">
+            <div className="w-12 h-12 rounded-xl bg-white/20 backdrop-blur-sm text-white flex items-center justify-center font-bold text-xl shadow-lg">
+              <svg className="w-7 h-7" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-2 10h-4v4h-2v-4H7v-2h4V7h2v4h4v2z" />
+              </svg>
+            </div>
+            <div>
+              <h1 className="text-lg font-bold text-white tracking-wide">
+                MediCare
+              </h1>
+              <p className="text-xs text-primary-100 font-medium">
+                Doctor Portal
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {/* Navigation */}
+        <nav className="flex-1 px-3 py-6 space-y-1 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-200">
+          {/* <p className="px-4 text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3">
+          Main Menu
+        </p> */}
+          {items.map((item) => (
+            <NavLink
+              key={item.label}
+              to={item.to}
+              className={({ isActive }) =>
+                `group w-full flex items-center gap-3 px-4 py-3 rounded-xl text-left text-sm font-medium transition-all duration-200 ${
+                  isActive
+                    ? "bg-gradient-to-r from-primary-500 to-primary-700 text-white shadow-lg shadow-primary-500/30 scale-[1.02]"
+                    : "text-gray-600 hover:bg-primary-50 hover:text-primary-600 hover:translate-x-1"
+                }`
+              }
+            >
+              <span className="transition-transform group-hover:scale-110">
+                {item.icon}
+              </span>
+              {item.label}
+            </NavLink>
+          ))}
+        </nav>
+
+        {/* User Profile Card */}
+        <div className="p-4 border-t border-gray-100 bg-gray-50/50">
+          <div className="bg-gradient-to-br from-primary-50 to-primary-100 rounded-xl p-4 flex items-center gap-3 border border-primary-100">
+            <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-primary-500 to-primary-700 text-white flex items-center justify-center font-bold shadow-lg shadow-primary-500/30">
+              {initials || "DR"}
+            </div>
+            <div className="flex-1 min-w-0">
+              <p className="text-sm font-semibold text-gray-800 truncate">
+                {name}
+              </p>
+              <p className="text-xs text-primary-600 truncate">
+                {user?.email || ""}
+              </p>
+            </div>
+          </div>
+          <button
+            type="button"
+            onClick={() => {
+              logout();
+              navigate("/login");
+            }}
+            className="mt-4 w-full group flex items-center justify-center gap-2 px-4 py-3 text-sm font-medium text-gray-600 border-2 border-gray-200 rounded-xl hover:border-primary-300 hover:bg-primary-50 hover:text-primary-600 transition-all duration-200"
+          >
+            <svg
+              className="w-5 h-5 transition-transform group-hover:-translate-x-1"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
+              />
+            </svg>
+            <span>Logout</span>
+          </button>
+        </div>
+      </aside>
     </>
   );
 };

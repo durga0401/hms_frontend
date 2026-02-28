@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { authAPI } from "../services/api";
 import { Input, Select, Button, Alert, Card } from "../components/ui";
@@ -12,6 +12,7 @@ const roles = [
 const Register = () => {
   const navigate = useNavigate();
 
+  const [step, setStep] = useState("form"); // "form" | "otp"
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -25,13 +26,25 @@ const Register = () => {
     consultation_fee: "",
   });
 
+  const [otp, setOtp] = useState(["", "", "", "", "", ""]);
+  const otpRefs = useRef([]);
+
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [loading, setLoading] = useState(false);
+  const [resendTimer, setResendTimer] = useState(0);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const isDoctor = formData.role === "DOCTOR";
+
+  // Countdown timer for resend OTP
+  useEffect(() => {
+    if (resendTimer > 0) {
+      const timer = setTimeout(() => setResendTimer(resendTimer - 1), 1000);
+      return () => clearTimeout(timer);
+    }
+  }, [resendTimer]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -41,6 +54,33 @@ const Register = () => {
     }));
     setError("");
     setSuccess("");
+  };
+
+  const handleOtpChange = (index, value) => {
+    if (value.length > 1) {
+      // Handle paste
+      const pastedOtp = value.slice(0, 6).split("");
+      const newOtp = [...otp];
+      pastedOtp.forEach((char, i) => {
+        if (index + i < 6) newOtp[index + i] = char;
+      });
+      setOtp(newOtp);
+      const nextIndex = Math.min(index + pastedOtp.length, 5);
+      otpRefs.current[nextIndex]?.focus();
+    } else {
+      const newOtp = [...otp];
+      newOtp[index] = value;
+      setOtp(newOtp);
+      if (value && index < 5) {
+        otpRefs.current[index + 1]?.focus();
+      }
+    }
+  };
+
+  const handleOtpKeyDown = (index, e) => {
+    if (e.key === "Backspace" && !otp[index] && index > 0) {
+      otpRefs.current[index - 1]?.focus();
+    }
   };
 
   const validateForm = () => {
@@ -54,6 +94,9 @@ const Register = () => {
     }
     if (formData.password !== formData.confirmPassword) {
       return "Passwords do not match.";
+    }
+    if (formData.password.length < 6) {
+      return "Password must be at least 6 characters.";
     }
     if (isDoctor) {
       if (
@@ -90,7 +133,7 @@ const Register = () => {
     return payload;
   };
 
-  const handleSubmit = async (e) => {
+  const handleSendOtp = async (e) => {
     e.preventDefault();
     setError("");
     setSuccess("");
@@ -104,20 +147,73 @@ const Register = () => {
     setLoading(true);
     try {
       const payload = buildPayload();
-      const response = await authAPI.register(payload);
-      const message = response.data?.message || "Registration successful.";
-      setSuccess(message);
-
-      setTimeout(() => {
-        navigate("/login");
-      }, 900);
+      const response = await authAPI.sendRegistrationOtp(payload);
+      setSuccess(response.data?.message || "OTP sent to your email!");
+      setStep("otp");
+      setResendTimer(60); // 60 seconds before allowing resend
+      setOtp(["", "", "", "", "", ""]);
     } catch (err) {
       setError(
-        err.response?.data?.message || "Registration failed. Please try again.",
+        err.response?.data?.message || "Failed to send OTP. Please try again.",
       );
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleVerifyOtp = async (e) => {
+    e.preventDefault();
+    setError("");
+    setSuccess("");
+
+    const otpString = otp.join("");
+    if (otpString.length !== 6) {
+      setError("Please enter the complete 6-digit OTP.");
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const response = await authAPI.verifyRegistrationOtp(formData.email, otpString);
+      setSuccess(response.data?.message || "Registration successful!");
+      setTimeout(() => {
+        navigate("/login");
+      }, 1500);
+    } catch (err) {
+      setError(
+        err.response?.data?.message || "Invalid OTP. Please try again.",
+      );
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleResendOtp = async () => {
+    if (resendTimer > 0) return;
+
+    setError("");
+    setSuccess("");
+    setLoading(true);
+
+    try {
+      const response = await authAPI.resendRegistrationOtp(formData.email);
+      setSuccess(response.data?.message || "New OTP sent!");
+      setResendTimer(60);
+      setOtp(["", "", "", "", "", ""]);
+    } catch (err) {
+      setError(
+        err.response?.data?.message || "Failed to resend OTP. Please try again.",
+      );
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleBackToForm = () => {
+    setStep("form");
+    setOtp(["", "", "", "", "", ""]);
+    setError("");
+    setSuccess("");
   };
 
   return (
@@ -227,7 +323,136 @@ const Register = () => {
               />
             )}
 
-            <form onSubmit={handleSubmit} className="space-y-4">
+            {/* Step Indicator */}
+            <div className="flex items-center justify-center gap-2 mb-6">
+              <div
+                className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold ${
+                  step === "form"
+                    ? "bg-primary-600 text-white"
+                    : "bg-primary-100 text-primary-600"
+                }`}
+              >
+                1
+              </div>
+              <div className="w-12 h-0.5 bg-gray-200"></div>
+              <div
+                className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold ${
+                  step === "otp"
+                    ? "bg-primary-600 text-white"
+                    : "bg-gray-100 text-gray-400"
+                }`}
+              >
+                2
+              </div>
+            </div>
+
+            {step === "otp" ? (
+              /* OTP Verification Step */
+              <div className="space-y-6">
+                <div className="text-center">
+                  <div className="w-16 h-16 bg-gradient-to-br from-primary-100 to-primary-200 rounded-2xl mx-auto mb-4 flex items-center justify-center">
+                    <svg
+                      className="w-8 h-8 text-primary-600"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
+                      />
+                    </svg>
+                  </div>
+                  <h2 className="text-xl font-bold text-gray-800 mb-2">
+                    Verify Your Email
+                  </h2>
+                  <p className="text-gray-500 text-sm">
+                    We've sent a 6-digit OTP to{" "}
+                    <span className="font-semibold text-primary-600">
+                      {formData.email}
+                    </span>
+                  </p>
+                </div>
+
+                <form onSubmit={handleVerifyOtp} className="space-y-6">
+                  {/* OTP Input */}
+                  <div className="flex justify-center gap-2 sm:gap-3">
+                    {otp.map((digit, index) => (
+                      <input
+                        key={index}
+                        ref={(el) => (otpRefs.current[index] = el)}
+                        type="text"
+                        inputMode="numeric"
+                        maxLength={6}
+                        value={digit}
+                        onChange={(e) =>
+                          handleOtpChange(index, e.target.value.replace(/\D/g, ""))
+                        }
+                        onKeyDown={(e) => handleOtpKeyDown(index, e)}
+                        className="w-10 h-12 sm:w-12 sm:h-14 text-center text-xl font-bold border-2 border-gray-200 rounded-xl focus:border-primary-500 focus:ring-2 focus:ring-primary-100 outline-none transition-all"
+                      />
+                    ))}
+                  </div>
+
+                  <Button
+                    type="submit"
+                    variant="gradient"
+                    size="lg"
+                    fullWidth
+                    loading={loading}
+                  >
+                    Verify & Create Account
+                  </Button>
+                </form>
+
+                {/* Resend OTP */}
+                <div className="text-center">
+                  <p className="text-gray-500 text-sm">
+                    Didn't receive the code?{" "}
+                    {resendTimer > 0 ? (
+                      <span className="text-gray-400">
+                        Resend in {resendTimer}s
+                      </span>
+                    ) : (
+                      <button
+                        type="button"
+                        onClick={handleResendOtp}
+                        disabled={loading}
+                        className="text-primary-600 hover:text-primary-700 font-semibold transition-colors"
+                      >
+                        Resend OTP
+                      </button>
+                    )}
+                  </p>
+                </div>
+
+                {/* Back Button */}
+                <button
+                  type="button"
+                  onClick={handleBackToForm}
+                  className="w-full flex items-center justify-center gap-2 text-gray-600 hover:text-gray-800 font-medium transition-colors"
+                >
+                  <svg
+                    className="w-4 h-4"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M15 19l-7-7 7-7"
+                    />
+                  </svg>
+                  Back to Registration
+                </button>
+              </div>
+            ) : (
+              /* Registration Form Step */
+              <form onSubmit={handleSendOtp} className="space-y-4">
               {/* Role Selection */}
               <div className="mb-4">
                 <label className="block text-sm font-semibold text-gray-700 mb-2">
@@ -473,9 +698,10 @@ const Register = () => {
                 fullWidth
                 loading={loading}
               >
-                Create Account
+                Continue with Email Verification
               </Button>
             </form>
+            )}
 
             <div className="mt-6 text-center">
               <p className="text-gray-600">

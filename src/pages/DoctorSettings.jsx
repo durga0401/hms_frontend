@@ -99,9 +99,16 @@ const DoctorSettings = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <DoctorSidebar user={user} isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
+      <DoctorSidebar
+        user={user}
+        isOpen={sidebarOpen}
+        onClose={() => setSidebarOpen(false)}
+      />
       <div className="lg:ml-64">
-        <DoctorNavbar title="Settings" onMenuClick={() => setSidebarOpen(true)} />
+        <DoctorNavbar
+          title="Settings"
+          onMenuClick={() => setSidebarOpen(true)}
+        />
         <main className="p-4 sm:p-6">
           <div className="max-w-2xl space-y-6">
             {/* Profile Settings */}

@@ -89,7 +89,11 @@ const DoctorDashboard = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <DoctorSidebar user={user} isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
+      <DoctorSidebar
+        user={user}
+        isOpen={sidebarOpen}
+        onClose={() => setSidebarOpen(false)}
+      />
       <div className="lg:ml-64">
         <DoctorNavbar
           title="Dashboard"

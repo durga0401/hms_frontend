@@ -16,11 +16,21 @@ const DoctorNavbar = ({
           onClick={onMenuClick}
           className="lg:hidden p-2 rounded-lg hover:bg-gray-100 text-gray-600"
         >
-          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+          <svg
+            className="w-6 h-6"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M4 6h16M4 12h16M4 18h16"
+            />
           </svg>
         </button>
-        
+
         <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary-500 to-primary-700 text-white flex items-center justify-center font-bold shadow-lg shadow-primary-500/30">
           <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
             <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-2 10h-4v4h-2v-4H7v-2h4V7h2v4h4v2z" />
@@ -30,7 +40,9 @@ const DoctorNavbar = ({
           <p className="text-xs font-semibold text-primary-600 uppercase tracking-wider">
             Doctor Portal
           </p>
-          <h2 className="text-base sm:text-lg font-bold text-gray-800">{title}</h2>
+          <h2 className="text-base sm:text-lg font-bold text-gray-800">
+            {title}
+          </h2>
         </div>
       </div>
 

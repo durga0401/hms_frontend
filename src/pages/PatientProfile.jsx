@@ -96,9 +96,17 @@ const PatientProfile = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <Sidebar user={user} isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
+      <Sidebar
+        user={user}
+        isOpen={sidebarOpen}
+        onClose={() => setSidebarOpen(false)}
+      />
       <div className="lg:ml-64">
-        <Navbar title="Profile" showSearch={false} onMenuClick={() => setSidebarOpen(true)} />
+        <Navbar
+          title="Profile"
+          showSearch={false}
+          onMenuClick={() => setSidebarOpen(true)}
+        />
         <main className="p-4 sm:p-6">
           <div className="max-w-3xl space-y-6">
             {/* Profile Header */}

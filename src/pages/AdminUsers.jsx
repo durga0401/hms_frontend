@@ -220,7 +220,10 @@ const AdminUsers = () => {
 
   return (
     <div className="min-h-screen bg-gray-100">
-      <AdminSidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
+      <AdminSidebar
+        isOpen={sidebarOpen}
+        onClose={() => setSidebarOpen(false)}
+      />
       <div className="lg:ml-64">
         <AdminNavbar onMenuClick={() => setSidebarOpen(true)} />
         <div className="p-4 sm:p-6">

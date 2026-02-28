@@ -38,15 +38,27 @@ const Navbar = ({
             className="lg:hidden p-2 rounded-xl bg-gray-50 hover:bg-gray-100 text-gray-600"
             aria-label="Open menu"
           >
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+            <svg
+              className="w-5 h-5"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M4 6h16M4 12h16M4 18h16"
+              />
             </svg>
           </button>
           <div>
             <p className="text-xs font-medium text-primary-600 uppercase tracking-wider">
               Patient Portal
             </p>
-            <h2 className="text-lg sm:text-xl font-bold text-gray-900">{title}</h2>
+            <h2 className="text-lg sm:text-xl font-bold text-gray-900">
+              {title}
+            </h2>
           </div>
         </div>
 

@@ -70,7 +70,11 @@ const PatientSettings = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <Sidebar user={user} isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
+      <Sidebar
+        user={user}
+        isOpen={sidebarOpen}
+        onClose={() => setSidebarOpen(false)}
+      />
       <div className="lg:ml-64">
         <Navbar title="Settings" onMenuClick={() => setSidebarOpen(true)} />
         <main className="p-4 sm:p-6">
