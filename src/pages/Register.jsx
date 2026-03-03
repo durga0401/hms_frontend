@@ -174,15 +174,16 @@ const Register = () => {
 
     setLoading(true);
     try {
-      const response = await authAPI.verifyRegistrationOtp(formData.email, otpString);
+      const response = await authAPI.verifyRegistrationOtp(
+        formData.email,
+        otpString,
+      );
       setSuccess(response.data?.message || "Registration successful!");
       setTimeout(() => {
         navigate("/login");
       }, 1500);
     } catch (err) {
-      setError(
-        err.response?.data?.message || "Invalid OTP. Please try again.",
-      );
+      setError(err.response?.data?.message || "Invalid OTP. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -202,7 +203,8 @@ const Register = () => {
       setOtp(["", "", "", "", "", ""]);
     } catch (err) {
       setError(
-        err.response?.data?.message || "Failed to resend OTP. Please try again.",
+        err.response?.data?.message ||
+          "Failed to resend OTP. Please try again.",
       );
     } finally {
       setLoading(false);
@@ -388,7 +390,10 @@ const Register = () => {
                         maxLength={6}
                         value={digit}
                         onChange={(e) =>
-                          handleOtpChange(index, e.target.value.replace(/\D/g, ""))
+                          handleOtpChange(
+                            index,
+                            e.target.value.replace(/\D/g, ""),
+                          )
                         }
                         onKeyDown={(e) => handleOtpKeyDown(index, e)}
                         className="w-10 h-12 sm:w-12 sm:h-14 text-center text-xl font-bold border-2 border-gray-200 rounded-xl focus:border-primary-500 focus:ring-2 focus:ring-primary-100 outline-none transition-all"
@@ -453,22 +458,22 @@ const Register = () => {
             ) : (
               /* Registration Form Step */
               <form onSubmit={handleSendOtp} className="space-y-4">
-              {/* Role Selection */}
-              <div className="mb-4">
-                <label className="block text-sm font-semibold text-gray-700 mb-2">
-                  Register As
-                </label>
-                <div className="grid grid-cols-3 gap-3">
-                  {roles.map((role) => (
-                    <button
-                      key={role.value}
-                      type="button"
-                      onClick={() =>
-                        handleChange({
-                          target: { name: "role", value: role.value },
-                        })
-                      }
-                      className={`
+                {/* Role Selection */}
+                <div className="mb-4">
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    Register As
+                  </label>
+                  <div className="grid grid-cols-3 gap-3">
+                    {roles.map((role) => (
+                      <button
+                        key={role.value}
+                        type="button"
+                        onClick={() =>
+                          handleChange({
+                            target: { name: "role", value: role.value },
+                          })
+                        }
+                        className={`
                         py-3 px-4 rounded-xl border-2 font-medium text-sm transition-all duration-200
                         ${
                           formData.role === role.value
@@ -476,51 +481,109 @@ const Register = () => {
                             : "border-gray-200 text-gray-600 hover:border-gray-300 hover:bg-gray-50"
                         }
                       `}
-                    >
-                      {role.label}
-                    </button>
-                  ))}
+                      >
+                        {role.label}
+                      </button>
+                    ))}
+                  </div>
                 </div>
-              </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <Input
-                  label="Full Name"
-                  name="name"
-                  value={formData.name}
-                  onChange={handleChange}
-                  placeholder="John Doe"
-                  required
-                />
-                <Input
-                  label="Phone Number"
-                  name="phone"
-                  value={formData.phone}
-                  onChange={handleChange}
-                  placeholder="+91 98765 43210"
-                />
-              </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <Input
+                    label="Full Name"
+                    name="name"
+                    value={formData.name}
+                    onChange={handleChange}
+                    placeholder="John Doe"
+                    required
+                  />
+                  <Input
+                    label="Phone Number"
+                    name="phone"
+                    value={formData.phone}
+                    onChange={handleChange}
+                    placeholder="+91 98765 43210"
+                  />
+                </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <Input
+                    label="Email Address"
+                    type="email"
+                    name="email"
+                    value={formData.email}
+                    onChange={handleChange}
+                    placeholder="john@example.com"
+                    required
+                  />
+                  <Input
+                    label="Password"
+                    type={showPassword ? "text" : "password"}
+                    name="password"
+                    value={formData.password}
+                    onChange={handleChange}
+                    placeholder="Enter a strong password"
+                    required
+                    rightIcon={
+                      showPassword ? (
+                        <svg
+                          className="w-5 h-5"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth="2"
+                            d="M13.875 18.825A10.05 10.05 0 0112 19c-5 0-9.27-3.11-10.75-7.5a11.05 11.05 0 012.32-3.9m3.12-2.36A9.96 9.96 0 0112 5c5 0 9.27 3.11 10.75 7.5a11.01 11.01 0 01-4.29 5.32M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                          />
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth="2"
+                            d="M3 3l18 18"
+                          />
+                        </svg>
+                      ) : (
+                        <svg
+                          className="w-5 h-5"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth="2"
+                            d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                          />
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth="2"
+                            d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+                          />
+                        </svg>
+                      )
+                    }
+                    onRightIconClick={() => setShowPassword((prev) => !prev)}
+                    rightIconLabel={
+                      showPassword ? "Hide password" : "Show password"
+                    }
+                  />
+                </div>
+
                 <Input
-                  label="Email Address"
-                  type="email"
-                  name="email"
-                  value={formData.email}
+                  label="Confirm Password"
+                  type={showConfirmPassword ? "text" : "password"}
+                  name="confirmPassword"
+                  value={formData.confirmPassword}
                   onChange={handleChange}
-                  placeholder="john@example.com"
-                  required
-                />
-                <Input
-                  label="Password"
-                  type={showPassword ? "text" : "password"}
-                  name="password"
-                  value={formData.password}
-                  onChange={handleChange}
-                  placeholder="Enter a strong password"
+                  placeholder="Confirm your password"
                   required
                   rightIcon={
-                    showPassword ? (
+                    showConfirmPassword ? (
                       <svg
                         className="w-5 h-5"
                         fill="none"
@@ -562,145 +625,89 @@ const Register = () => {
                       </svg>
                     )
                   }
-                  onRightIconClick={() => setShowPassword((prev) => !prev)}
+                  onRightIconClick={() =>
+                    setShowConfirmPassword((prev) => !prev)
+                  }
                   rightIconLabel={
-                    showPassword ? "Hide password" : "Show password"
+                    showConfirmPassword ? "Hide password" : "Show password"
                   }
                 />
-              </div>
 
-              <Input
-                label="Confirm Password"
-                type={showConfirmPassword ? "text" : "password"}
-                name="confirmPassword"
-                value={formData.confirmPassword}
-                onChange={handleChange}
-                placeholder="Confirm your password"
-                required
-                rightIcon={
-                  showConfirmPassword ? (
-                    <svg
-                      className="w-5 h-5"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth="2"
-                        d="M13.875 18.825A10.05 10.05 0 0112 19c-5 0-9.27-3.11-10.75-7.5a11.05 11.05 0 012.32-3.9m3.12-2.36A9.96 9.96 0 0112 5c5 0 9.27 3.11 10.75 7.5a11.01 11.01 0 01-4.29 5.32M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-                      />
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth="2"
-                        d="M3 3l18 18"
-                      />
-                    </svg>
-                  ) : (
-                    <svg
-                      className="w-5 h-5"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth="2"
-                        d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-                      />
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth="2"
-                        d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
-                      />
-                    </svg>
-                  )
-                }
-                onRightIconClick={() => setShowConfirmPassword((prev) => !prev)}
-                rightIconLabel={
-                  showConfirmPassword ? "Hide password" : "Show password"
-                }
-              />
-
-              {isDoctor && (
-                <div className="bg-gradient-to-br from-primary-50 to-primary-100 border border-primary-100 rounded-xl p-5 mb-4">
-                  <div className="flex items-center justify-between mb-4">
-                    <div className="flex items-center gap-2 text-primary-700 font-semibold">
-                      <svg
-                        className="w-5 h-5"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth="2"
-                          d="M9 12h6m-3-3v6m7 2a2 2 0 002-2V7a2 2 0 00-2-2h-3.5l-1-2h-5l-1 2H5a2 2 0 00-2 2v8a2 2 0 002 2h14z"
-                        />
-                      </svg>
-                      Professional Details
+                {isDoctor && (
+                  <div className="bg-gradient-to-br from-primary-50 to-primary-100 border border-primary-100 rounded-xl p-5 mb-4">
+                    <div className="flex items-center justify-between mb-4">
+                      <div className="flex items-center gap-2 text-primary-700 font-semibold">
+                        <svg
+                          className="w-5 h-5"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth="2"
+                            d="M9 12h6m-3-3v6m7 2a2 2 0 002-2V7a2 2 0 00-2-2h-3.5l-1-2h-5l-1 2H5a2 2 0 00-2 2v8a2 2 0 002 2h14z"
+                          />
+                        </svg>
+                        Professional Details
+                      </div>
+                      <span className="text-xs font-semibold text-primary-600 bg-primary-100 px-3 py-1 rounded-full">
+                        Doctor
+                      </span>
                     </div>
-                    <span className="text-xs font-semibold text-primary-600 bg-primary-100 px-3 py-1 rounded-full">
-                      Doctor
-                    </span>
-                  </div>
 
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <Input
+                        label="Specialization"
+                        name="specialization"
+                        value={formData.specialization}
+                        onChange={handleChange}
+                        placeholder="Cardiology"
+                        required
+                      />
+                      <Input
+                        label="Experience (Years)"
+                        type="number"
+                        name="experience"
+                        value={formData.experience}
+                        onChange={handleChange}
+                        placeholder="e.g. 5"
+                        required
+                      />
+                    </div>
+
                     <Input
-                      label="Specialization"
-                      name="specialization"
-                      value={formData.specialization}
+                      label="Qualification"
+                      name="qualification"
+                      value={formData.qualification}
                       onChange={handleChange}
-                      placeholder="Cardiology"
+                      placeholder="MBBS, MD, DM"
                       required
                     />
+
                     <Input
-                      label="Experience (Years)"
+                      label="Consultation Fee"
                       type="number"
-                      name="experience"
-                      value={formData.experience}
+                      name="consultation_fee"
+                      value={formData.consultation_fee}
                       onChange={handleChange}
-                      placeholder="e.g. 5"
+                      placeholder="e.g. 500"
                       required
                     />
                   </div>
+                )}
 
-                  <Input
-                    label="Qualification"
-                    name="qualification"
-                    value={formData.qualification}
-                    onChange={handleChange}
-                    placeholder="MBBS, MD, DM"
-                    required
-                  />
-
-                  <Input
-                    label="Consultation Fee"
-                    type="number"
-                    name="consultation_fee"
-                    value={formData.consultation_fee}
-                    onChange={handleChange}
-                    placeholder="e.g. 500"
-                    required
-                  />
-                </div>
-              )}
-
-              <Button
-                type="submit"
-                variant="gradient"
-                size="lg"
-                fullWidth
-                loading={loading}
-              >
-                Continue with Email Verification
-              </Button>
-            </form>
+                <Button
+                  type="submit"
+                  variant="gradient"
+                  size="lg"
+                  fullWidth
+                  loading={loading}
+                >
+                  Continue with Email Verification
+                </Button>
+              </form>
             )}
 
             <div className="mt-6 text-center">

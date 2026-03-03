@@ -71,9 +71,12 @@ export const authAPI = {
   login: (email, password) => api.post("/auth/login", { email, password }),
   register: (userData) => api.post("/auth/register", userData),
   // OTP-based registration
-  sendRegistrationOtp: (userData) => api.post("/auth/register/send-otp", userData),
-  verifyRegistrationOtp: (email, otp) => api.post("/auth/register/verify-otp", { email, otp }),
-  resendRegistrationOtp: (email) => api.post("/auth/register/resend-otp", { email }),
+  sendRegistrationOtp: (userData) =>
+    api.post("/auth/register/send-otp", userData),
+  verifyRegistrationOtp: (email, otp) =>
+    api.post("/auth/register/verify-otp", { email, otp }),
+  resendRegistrationOtp: (email) =>
+    api.post("/auth/register/resend-otp", { email }),
   getCsrfToken: () => api.get("/auth/csrf-token"),
   getProfile: () => api.get("/auth/profile"),
   updateProfile: (data) => api.put("/auth/profile", data),
