@@ -8,6 +8,19 @@ export const setCsrfToken = (token) => {
   csrfToken = token;
 };
 
+// Token management for cross-origin auth
+export const setAuthToken = (token) => {
+  if (token) {
+    localStorage.setItem("authToken", token);
+  } else {
+    localStorage.removeItem("authToken");
+  }
+};
+
+export const getAuthToken = () => {
+  return localStorage.getItem("authToken");
+};
+
 const api = axios.create({
   baseURL: API_URL,
   withCredentials: true,
@@ -16,7 +29,7 @@ const api = axios.create({
   },
 });
 
-// Add CSRF token to mutating requests
+// Add CSRF token and Auth token to requests
 api.interceptors.request.use(
   (config) => {
     const method = config.method?.toLowerCase();
@@ -24,6 +37,13 @@ api.interceptors.request.use(
     if (isMutating && csrfToken) {
       config.headers["X-CSRF-Token"] = csrfToken;
     }
+    
+    // Add Authorization header if token exists
+    const authToken = getAuthToken();
+    if (authToken) {
+      config.headers["Authorization"] = `Bearer ${authToken}`;
+    }
+    
     return config;
   },
   (error) => Promise.reject(error),

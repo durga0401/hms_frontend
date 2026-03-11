@@ -5,7 +5,7 @@ import {
   useEffect,
   useCallback,
 } from "react";
-import { authAPI, setCsrfToken } from "../services/api";
+import { authAPI, setCsrfToken, setAuthToken, getAuthToken } from "../services/api";
 
 const AuthContext = createContext(null);
 
@@ -31,13 +31,19 @@ export const AuthProvider = ({ children }) => {
 
         const authPages = ["/login", "/register", "/forgot-password"];
         const isOnAuthPage = authPages.includes(window.location.pathname);
-        if (!isOnAuthPage) {
+        
+        // Check if we have a stored token
+        const hasToken = !!getAuthToken();
+        
+        if (!isOnAuthPage && hasToken) {
           const profileRes = await authAPI.getProfile();
           if (profileRes.data?.data?.user) {
             setUser(profileRes.data.data.user);
           }
         }
       } catch (err) {
+        // Clear invalid token
+        setAuthToken(null);
         setUser(null);
       } finally {
         setLoading(false);
@@ -49,10 +55,15 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (email, password) => {
     const response = await authAPI.login(email, password);
-    const { user: userData } = response.data?.data || {};
+    const { user: userData, token } = response.data?.data || {};
 
     if (!userData) {
       throw new Error("Invalid login response");
+    }
+
+    // Store token in localStorage for cross-origin requests
+    if (token) {
+      setAuthToken(token);
     }
 
     setUser(userData);
@@ -62,9 +73,12 @@ export const AuthProvider = ({ children }) => {
   // OAuth login - just set token and user without API call
   const completeOAuth = useCallback(async () => {
     const response = await authAPI.oauthSession();
-    const { user: userData } = response.data?.data || {};
+    const { user: userData, token } = response.data?.data || {};
     if (!userData) {
       throw new Error("OAuth session incomplete");
+    }
+    if (token) {
+      setAuthToken(token);
     }
     setUser(userData);
     return userData;
@@ -74,6 +88,7 @@ export const AuthProvider = ({ children }) => {
     try {
       await authAPI.logout();
     } finally {
+      setAuthToken(null);  // Clear token on logout
       setUser(null);
     }
   };
