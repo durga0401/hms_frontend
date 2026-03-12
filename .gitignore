@@ -1,13 +1,43 @@
+# Dependencies
 node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Environment Variables
 .env
 .env.local
 .env.*.local
-.DS_Store
-dist/
-build/
+
+# AWS & Security
+*.pem
+*.key
+*.ppk
+aws-credentials.json
 
 # Terraform
 terraform/.terraform/
 terraform/*.tfstate
 terraform/*.tfstate.backup
 terraform/.terraform.lock.hcl
+terraform/terraform.tfvars
+terraform/*.tfvars
+
+# Logs
+logs/
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Build
+dist/
+build/
