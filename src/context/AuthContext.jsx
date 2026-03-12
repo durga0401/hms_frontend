@@ -5,7 +5,12 @@ import {
   useEffect,
   useCallback,
 } from "react";
-import { authAPI, setCsrfToken, setAuthToken, getAuthToken } from "../services/api";
+import {
+  authAPI,
+  setCsrfToken,
+  setAuthToken,
+  getAuthToken,
+} from "../services/api";
 
 const AuthContext = createContext(null);
 
@@ -31,10 +36,10 @@ export const AuthProvider = ({ children }) => {
 
         const authPages = ["/login", "/register", "/forgot-password"];
         const isOnAuthPage = authPages.includes(window.location.pathname);
-        
+
         // Check if we have a stored token
         const hasToken = !!getAuthToken();
-        
+
         if (!isOnAuthPage && hasToken) {
           const profileRes = await authAPI.getProfile();
           if (profileRes.data?.data?.user) {
@@ -88,7 +93,7 @@ export const AuthProvider = ({ children }) => {
     try {
       await authAPI.logout();
     } finally {
-      setAuthToken(null);  // Clear token on logout
+      setAuthToken(null); // Clear token on logout
       setUser(null);
     }
   };

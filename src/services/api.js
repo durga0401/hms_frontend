@@ -37,13 +37,13 @@ api.interceptors.request.use(
     if (isMutating && csrfToken) {
       config.headers["X-CSRF-Token"] = csrfToken;
     }
-    
+
     // Add Authorization header if token exists
     const authToken = getAuthToken();
     if (authToken) {
       config.headers["Authorization"] = `Bearer ${authToken}`;
     }
-    
+
     return config;
   },
   (error) => Promise.reject(error),
