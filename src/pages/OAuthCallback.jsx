@@ -6,7 +6,7 @@ import { Card, Loader } from "../components/ui";
 const OAuthCallback = () => {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
-  const { completeOAuth } = useAuth();
+  const { completeOAuthWithToken } = useAuth();
   const hasProcessed = useRef(false);
 
   useEffect(() => {
@@ -16,6 +16,7 @@ const OAuthCallback = () => {
 
     const handleOAuthCallback = async () => {
       const error = searchParams.get("error");
+      const token = searchParams.get("token");
 
       if (error) {
         navigate(
@@ -24,8 +25,13 @@ const OAuthCallback = () => {
         return;
       }
 
+      if (!token) {
+        navigate("/login?error=Authentication token not received");
+        return;
+      }
+
       try {
-        const user = await completeOAuth();
+        const user = await completeOAuthWithToken(token);
 
         switch (user.role) {
           case "ADMIN":
@@ -45,7 +51,7 @@ const OAuthCallback = () => {
     };
 
     handleOAuthCallback();
-  }, [searchParams, navigate, completeOAuth]);
+  }, [searchParams, navigate, completeOAuthWithToken]);
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50">

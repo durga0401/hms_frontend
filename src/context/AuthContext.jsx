@@ -75,7 +75,28 @@ export const AuthProvider = ({ children }) => {
     return userData;
   };
 
-  // OAuth login - just set token and user without API call
+  // OAuth login with token from URL (new method)
+  const completeOAuthWithToken = useCallback(async (token) => {
+    if (!token) {
+      throw new Error("No token provided");
+    }
+
+    // Store token first
+    setAuthToken(token);
+
+    // Fetch user profile with the token
+    const response = await authAPI.getProfile();
+    const userData = response.data?.data?.user;
+
+    if (!userData) {
+      throw new Error("Failed to fetch user profile");
+    }
+
+    setUser(userData);
+    return userData;
+  }, []);
+
+  // OAuth login - session-based (deprecated, kept for backward compatibility)
   const completeOAuth = useCallback(async () => {
     const response = await authAPI.oauthSession();
     const { user: userData, token } = response.data?.data || {};
@@ -104,6 +125,7 @@ export const AuthProvider = ({ children }) => {
     isAuthenticated: !!user,
     login,
     completeOAuth,
+    completeOAuthWithToken,
     logout,
   };
 
