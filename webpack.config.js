@@ -2,6 +2,13 @@ const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const webpack = require("webpack");
 
+// "auto" + WEBPACK_DEV_SERVER_BASE_PORT (see npm scripts) picks first free port from that base (e.g. 3000, 3001, …).
+let devServerPort = "auto";
+if (process.env.PORT != null && String(process.env.PORT).trim() !== "") {
+  const p = parseInt(process.env.PORT, 10);
+  if (Number.isFinite(p) && p > 0) devServerPort = p;
+}
+
 module.exports = {
   entry: "./src/index.jsx",
   output: {
@@ -65,14 +72,15 @@ module.exports = {
     static: {
       directory: path.join(__dirname, "public"),
     },
-    port: 3000,
+    port: devServerPort,
     hot: true,
     historyApiFallback: true,
-    proxy: {
-      "/api": {
+    proxy: [
+      {
+        context: ["/api"],
         target: "http://localhost:5001",
         changeOrigin: true,
       },
-    },
+    ],
   },
 };
